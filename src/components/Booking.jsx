@@ -39,6 +39,7 @@ class Booking extends React.Component {
     this.hideCalendarModal = this.hideModal.bind(this);
     this.showCalendarModal = this.showModal.bind(this);
     this.getSelectedDays = this.getSelectedDays.bind(this);
+    this.bookReservation = this.bookReservation.bind(this);
   }
 
   componentDidMount() {
@@ -197,12 +198,34 @@ class Booking extends React.Component {
     //if (checkOut) { this.getSelectedDays(); }
   }
 
+  bookReservation(event) {
+    event.preventDefault()
+    console.log('clicked')
+    const { bookHold, days } = this.state
+    bookHold.forEach((reservedDay) => {
+      const month = reservedDay[0]
+      const day = reservedDay[1]
+      console.log(days)
+      console.log(reservedDay)
+      newVal = days[month][day].booked = true
+      this.setState({
+        days: days[month][day].booked;
+      })
+    })
+  }
+
   render() {
     const guestType = 'adults';
     const {
       adults, children, infants, totalGuests, days, weekendPricing, checkIn, checkOut,
       calendarModalVisible, lastPossibleCheckOut, headerInfo, fees,
     } = this.state;
+
+    const style = {
+      'height': '100px',
+      'width': '200px',
+      'color': 'black',
+    }
 
     return (
       // <OuterPage>
@@ -230,6 +253,7 @@ class Booking extends React.Component {
           fees={fees}
           headerInfo={headerInfo}
         />
+        <input type="button" onClick={this.bookReservation} name="Book" label="Book" style={style} />
       </>
       // </OuterPage>
     );
