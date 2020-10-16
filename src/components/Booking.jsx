@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-import React from 'react';
-import styled from 'styled-components';
-import GlobalFonts from '../assets/fonts/GlobalFonts';
-import Widget from './Widget/Widget';
+import React from "react";
+import styled from "styled-components";
+import GlobalFonts from "../assets/fonts/GlobalFonts";
+import Widget from "./Widget/Widget";
 
 class Booking extends React.Component {
   constructor() {
@@ -43,16 +43,22 @@ class Booking extends React.Component {
   }
 
   componentDidMount() {
-    const windowId = window.location.href.split('/')[4];
-    const listing = Math.floor((Math.random() * 100) + 1);
+    const windowId = window.location.href.split("/")[4];
+    const listing = Math.floor(Math.random() * 100 + 1);
     const param = windowId || listing;
     this.setState({ currentListing: param });
 
-    fetch(`/api/booking/listing/${param}`)
+    fetch(`/api/booking/listings/${param}`)
       .then((response) => response.json())
       .then((data) => {
         const {
-          days, reservations, cleaningFee, weekendPricing, lowestPrice, rating, reviews,
+          days,
+          reservations,
+          cleaningFee,
+          weekendPricing,
+          lowestPrice,
+          rating,
+          reviews,
         } = data;
         this.setState({
           days,
@@ -62,7 +68,7 @@ class Booking extends React.Component {
           headerInfo: { lowestPrice, rating, reviews },
         });
       })
-      .catch((error) => console.error('Fetch error: ', error));
+      .catch((error) => console.error("Fetch error: ", error));
   }
 
   getLastDayCheckOut(selectedMonthIndex, selectedDayIndex) {
@@ -78,17 +84,26 @@ class Booking extends React.Component {
   }
 
   getSelectedDays(selectedMonthIndex, selectedDayIndex) {
-    const {
-      days, checkIn, checkOut, fees,
-    } = this.state;
+    const { days, checkIn, checkOut, fees } = this.state;
 
     const { cleaningFee } = fees;
 
     // Calculate number of days in the reservation
-    const nightCount = Math.floor(
-      // eslint-disable-next-line max-len
-      (Date.UTC(checkOut.getFullYear(), checkOut.getMonth(), checkOut.getDate()) - Date.UTC(checkIn.getFullYear(), checkIn.getMonth(), checkIn.getDate())) / (1000 * 60 * 60 * 24),
-    ) + 1;
+    const nightCount =
+      Math.floor(
+        // eslint-disable-next-line max-len
+        (Date.UTC(
+          checkOut.getFullYear(),
+          checkOut.getMonth(),
+          checkOut.getDate()
+        ) -
+          Date.UTC(
+            checkIn.getFullYear(),
+            checkIn.getMonth(),
+            checkIn.getDate()
+          )) /
+          (1000 * 60 * 60 * 24)
+      ) + 1;
 
     // Create an array of the date objects of all selected dates
     const nights = [];
@@ -106,14 +121,22 @@ class Booking extends React.Component {
 
     const initial = 0;
     // eslint-disable-next-line max-len
-    const basePrice = nights.reduce((accumulator, currentValue) => accumulator + currentValue.price, initial);
+    const basePrice = nights.reduce(
+      (accumulator, currentValue) => accumulator + currentValue.price,
+      initial
+    );
     const serviceFee = Math.ceil(basePrice * 0.0148);
     const taxes = Math.ceil(basePrice * 0.011);
     const total = basePrice + cleaningFee + serviceFee + taxes;
 
     this.setState({
       fees: {
-        cleaningFee, nights, basePrice, serviceFee, taxes, total,
+        cleaningFee,
+        nights,
+        basePrice,
+        serviceFee,
+        taxes,
+        total,
       },
       bookHold,
     });
@@ -125,7 +148,9 @@ class Booking extends React.Component {
 
     this.setState(
       (prevState) => ({ [targetName]: prevState[targetName] - 1 }),
-      () => { this.calcTotalGuests(); },
+      () => {
+        this.calcTotalGuests();
+      }
     );
   }
 
@@ -136,7 +161,9 @@ class Booking extends React.Component {
   }
 
   showModal(targetName, preFunct) {
-    if (preFunct) { preFunct(); }
+    if (preFunct) {
+      preFunct();
+    }
     this.setState({ [targetName]: true });
   }
 
@@ -155,7 +182,9 @@ class Booking extends React.Component {
 
     this.setState(
       (prevState) => ({ [targetName]: prevState[targetName] + 1 }),
-      () => { this.calcTotalGuests(); },
+      () => {
+        this.calcTotalGuests();
+      }
     );
   }
 
@@ -165,12 +194,18 @@ class Booking extends React.Component {
   }
 
   clearDates() {
-    this.setState({
-      checkIn: null,
-      checkOut: null,
-      lastPossibleCheckOut: new Date(2030, 12),
-      bookHold: [],
-    }, () => this.setState((prevState) => { prevState.cleaningFee; }));
+    this.setState(
+      {
+        checkIn: null,
+        checkOut: null,
+        lastPossibleCheckOut: new Date(2030, 12),
+        bookHold: [],
+      },
+      () =>
+        this.setState((prevState) => {
+          prevState.cleaningFee;
+        })
+    );
   }
 
   clearGuests() {
@@ -185,23 +220,36 @@ class Booking extends React.Component {
   selectDate(date, selectedMonthIndex, selectedDayIndex) {
     const { checkIn, checkOut } = this.state;
     if (!checkIn) {
-      this.setState({
-        checkIn: date,
-      }, () => this.setState({
-        lastPossibleCheckOut: this.getLastDayCheckOut(selectedMonthIndex, selectedDayIndex),
-      }));
+      this.setState(
+        {
+          checkIn: date,
+        },
+        () =>
+          this.setState({
+            lastPossibleCheckOut: this.getLastDayCheckOut(
+              selectedMonthIndex,
+              selectedDayIndex
+            ),
+          })
+      );
     } else if (checkIn && !checkOut) {
-      this.setState({
-        checkOut: date,
-      }, () => {
-        this.hideModal(null, 'calendarModalVisible');
-        this.getSelectedDays(selectedMonthIndex, selectedDayIndex);
-      });
+      this.setState(
+        {
+          checkOut: date,
+        },
+        () => {
+          this.hideModal(null, "calendarModalVisible");
+          this.getSelectedDays(selectedMonthIndex, selectedDayIndex);
+        }
+      );
     } else if (checkIn && checkOut) {
       this.clearDates();
       this.setState({
         checkIn: date,
-        lastPossibleCheckOut: this.getLastDayCheckOut(selectedMonthIndex, selectedDayIndex),
+        lastPossibleCheckOut: this.getLastDayCheckOut(
+          selectedMonthIndex,
+          selectedDayIndex
+        ),
       });
     }
     // if (checkOut) { this.getSelectedDays(); }
@@ -209,11 +257,17 @@ class Booking extends React.Component {
 
   addReservation() {
     const {
-      currentListing, checkIn, checkOut, adults, children, infants, fees, days, bookHold,
+      currentListing,
+      checkIn,
+      checkOut,
+      adults,
+      children,
+      infants,
+      fees,
+      days,
+      bookHold,
     } = this.state;
-    const {
-      cleaningFee, basePrice, serviceFee, taxes, total,
-    } = fees;
+    const { cleaningFee, basePrice, serviceFee, taxes, total } = fees;
 
     const newBooking = {
       checkIn,
@@ -232,37 +286,48 @@ class Booking extends React.Component {
       },
     };
 
-    let daysCopy = days
+    let daysCopy = days;
 
     bookHold.forEach((resDay) => {
-      console.log(resDay)
-      const month = resDay[0]
-      const day = resDay[1] + 1
+      console.log(resDay);
+      const month = resDay[0];
+      const day = resDay[1] + 1;
       daysCopy[month][day].booked = true;
     });
 
     this.setState({ days: daysCopy });
 
-    console.log('hit add');
+    console.log("hit add");
+    console.log(JSON.stringify({ newBooking, days }));
 
-    fetch(`api/booking/listing/reservation/${currentListing}`, {
-      method: 'PATCH', // or 'PUT'
+    fetch(`api/booking/listings/${currentListing}/reservation/`, {
+      method: "PATCH", // or 'PUT'
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(newBooking, days),
+      body: JSON.stringify({ newBooking, days }),
     })
       .then((response) => response.json())
       .then(() => this.clearDates())
       .then(() => this.clearGuests())
-      .catch((error) => console.error('Fetch error: ', error));
+      .catch((error) => console.error("Fetch error: ", error));
   }
 
   render() {
-    const guestType = 'adults';
+    const guestType = "adults";
     const {
-      adults, children, infants, totalGuests, days, weekendPricing, checkIn, checkOut,
-      calendarModalVisible, lastPossibleCheckOut, headerInfo, fees,
+      adults,
+      children,
+      infants,
+      totalGuests,
+      days,
+      weekendPricing,
+      checkIn,
+      checkOut,
+      calendarModalVisible,
+      lastPossibleCheckOut,
+      headerInfo,
+      fees,
     } = this.state;
 
     return (
@@ -271,7 +336,10 @@ class Booking extends React.Component {
         <GlobalFonts />
         <Widget
           guests={{
-            adults, children, infants, totalGuests,
+            adults,
+            children,
+            infants,
+            totalGuests,
           }}
           increaseGuestCount={this.increaseGuestCount}
           decreaseGuestCount={this.decreaseGuestCount}
