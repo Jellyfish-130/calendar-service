@@ -6,26 +6,28 @@ USE calender_service;
 
 
 CREATE TABLE listings (
-  listing_id int PRIMARY KEY,
+  listing_id uuid,
   weekend_pricing boolean,
   cleaning_fee int,
   lowest_price int,
   rating int,
-  reviews int
+  reviews int,
+  PRIMARY KEY (listing_id)
 );
 
-CREATE TABLE day (
-  day_id int PRIMARY KEY,
-  listing_id int,
-  date DATE,
+CREATE TABLE days_by_listing (
+  day_id uuid,
+  listing_id uuid,
+  date date,
   booked boolean,
   price int,
-  minimum_nights int
+  minimum_nights int,
+  PRIMARY KEY (listing_id, day_id)
 );
 
-CREATE TABLE reservation (
-  reservation_id int PRIMARY KEY,
-  listing_id int,
+CREATE TABLE reservations_by_listing (
+  reservation_id uuid,
+  listing_id uuid,
   check_in text,
   check_out text,
   guest_adults int,
@@ -36,4 +38,7 @@ CREATE TABLE reservation (
   fees_service_fee int,
   fees_taxes int,
   fees_total int,
+  PRIMARY KEY (listing_id, reservation_id)
 );
+
+WITH CLUSTERING ORDER BY (days_by_listing, ASCENDING)

@@ -82,6 +82,8 @@ npm install
 
 - POST `/api/booking/listings`
 
+**Description:** `Seeds 100 day arrays, each with 182 objects, and each day array is followed up with a blank reservation array.`
+
 **Success Status Code:** `201`
 
 **Returns:** JSON
@@ -97,7 +99,7 @@ npm install
           "booked": true,
           "price": 180,
           "minimumNights": 1
-        }
+        },...
       ]
     ],
     "_id": "5f87877a925bba0f2706b052",
@@ -117,6 +119,8 @@ npm install
 
 - GET `/api/booking/listings`
 
+**Description:** `Gets all listings, but unlike with the POST data, a day array is followed up with a reservation array that includes guests, fees, checkIn and checkOut based on selected dates to stay.`
+
 **Success Status Code:** `200`
 
 **Returns:** JSON
@@ -127,43 +131,42 @@ npm install
     "days": [
       [
         {
-          "_id": "5f87877a925bba0f2706b108",
+          "_id": "5f89fa9aa716c1d7b8f5e59e",
           "date": "2021-03-31T14:00:00.000Z",
           "booked": true,
-          "price": 180,
+          "price": 355,
           "minimumNights": 1
-        }
+        },...
       ]
     ],
-    "_id": "5f87877a925bba0f2706b052",
-    "listing_id": 1,
-    "cleaningFee": 70,
+    "_id": "5f89fa9aa716c1d7b8f5e4e8",
+    "listing_id": 33,
+    "cleaningFee": 72,
     "weekendPricing": true,
-    "lowestPrice": 180,
-    "rating": 3.94,
-    "reviews": 745,
+    "lowestPrice": 355,
+    "rating": 3.66,
+    "reviews": 1088,
     "reservations": [
       {
         "guests": {
-          "adults": 1,
-          "children": 0,
-          "infants": 0
+            "adults": 1,
+            "children": 0,
+            "infants": 0
         },
         "fees": {
-          "cleaningFee": 70,
-          "basePrice": 592,
-          "serviceFee": 9,
-          "taxes": 7,
-          "total": 695
+            "cleaningFee": 72,
+            "basePrice": 1065,
+            "serviceFee": 16,
+            "taxes": 12,
+            "total": 1165
         },
-        "_id": "5f88f915a716c1d7b8f5cb2d",
-        "checkIn": "2020-10-19T13:00:00.000Z",
+        "_id": "5f89faf0a716c1d7b8f616f0",
+        "checkIn": "2020-10-18T13:00:00.000Z",
         "checkOut": "2020-10-21T13:00:00.000Z"
       }
     ],
-    "__v": 0
-  }
-]
+  "__v": 0
+}
 ```
 
 ### Get listing by ID
@@ -175,6 +178,8 @@ npm install
 - `listingId` date id
 - Ex: `/api/booking/listings/91`
 
+**Description:** `Gets listings by ID, which are from 1 -100, inclusive.`
+
 **Success Status Code:** `200`
 
 **Returns:** JSON
@@ -185,43 +190,42 @@ npm install
     "days": [
       [
         {
-          "_id": "5f87877a925bba0f2706b108",
+          "_id": "5f89fa9aa716c1d7b8f5e59e",
           "date": "2021-03-31T14:00:00.000Z",
           "booked": true,
-          "price": 180,
+          "price": 355,
           "minimumNights": 1
-        }
+        },...
       ]
     ],
-    "_id": "5f87877a925bba0f2706b052",
-    "listing_id": 1,
-    "cleaningFee": 70,
+    "_id": "5f89fa9aa716c1d7b8f5e4e8",
+    "listing_id": 33,
+    "cleaningFee": 72,
     "weekendPricing": true,
-    "lowestPrice": 180,
-    "rating": 3.94,
-    "reviews": 745,
+    "lowestPrice": 355,
+    "rating": 3.66,
+    "reviews": 1088,
     "reservations": [
       {
         "guests": {
-          "adults": 1,
-          "children": 0,
-          "infants": 0
+            "adults": 1,
+            "children": 0,
+            "infants": 0
         },
         "fees": {
-          "cleaningFee": 70,
-          "basePrice": 592,
-          "serviceFee": 9,
-          "taxes": 7,
-          "total": 695
+            "cleaningFee": 72,
+            "basePrice": 1065,
+            "serviceFee": 16,
+            "taxes": 12,
+            "total": 1165
         },
-        "_id": "5f88f915a716c1d7b8f5cb2d",
-        "checkIn": "2020-10-19T13:00:00.000Z",
+        "_id": "5f89faf0a716c1d7b8f616f0",
+        "checkIn": "2020-10-18T13:00:00.000Z",
         "checkOut": "2020-10-21T13:00:00.000Z"
       }
     ],
-    "__v": 0
-  }
-]
+  "__v": 0
+}
 ```
 
 ### Add booking to listing by ID
@@ -233,9 +237,11 @@ npm install
 - `listingId` date id
 - Ex: `/api/booking/listings/91/reservation`
 
+**Description:** `Add reservation information by listing ID, which are from 1 -100, inclusive.`
+
 **Success Status Code:** `204`
 
-**Body:** JSON
+**Request Body:** JSON
 
 ```json
 {
@@ -277,6 +283,8 @@ npm install
 ### Delete all listings
 
 - DELETE `/api/booking/listings`
+
+**Description:** `Delete all listings from calender.`
 
 **Success Status Code:** `204`
 
