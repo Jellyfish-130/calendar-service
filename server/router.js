@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const schema = require("../database/schema.js");
+const schema = require("../schemas/mongodb.js");
 
 /* eslint-disable no-console */
 const dayjs = require("dayjs");
@@ -8,7 +8,7 @@ const utc = require("dayjs/plugin/utc");
 
 dayjs.extend(utc);
 
-// POST Request (for seeding)
+// POST Request (seed listings)
 router.route("/listings/").post((req, res) => {
   let listCount = 1;
   let globalArray = [];
@@ -96,30 +96,30 @@ router.route("/listings/").post((req, res) => {
   }
 });
 
-// **GET Request (for getting all listings)
+// **GET Request (get all listings)
 router.route("/listings/").get((req, res) => {
   schema.Listing.find()
     .then((listings) => res.status(200).send(listings))
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **GET Request (for getting listing ID)
-router.route("/listing/:listingId").get((req, res) => {
+// **GET Request (get listing by ID)
+router.route("/listings/:listingId").get((req, res) => {
   const { listingId } = req.params;
   schema.Listing.findOne({ listing_id: listingId })
     .then((listing) => res.status(200).send(listing))
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **PATCH Request (for change in selected date)
-router.route("/listing/reservation/:listingId").patch((req, res) => {
+// **PATCH Request (adding booking to listing by ID)
+router.route("/listings/:listingId/reservation").patch((req, res) => {
   const { listingId } = req.params;
-  const newListing = req.body;
-  const days = req.body;
+  const { newBooking } = req.body;
+  const { days } = req.body;
 
   schema.Listing.updateOne(
     { listing_id: listingId },
-    { $push: { reservations: newListing }, days },
+    { $push: { reservations: newBooking }, days },
     { returnNewDocument: true }
   )
     .then((updateMetadata) => {
@@ -131,7 +131,7 @@ router.route("/listing/reservation/:listingId").patch((req, res) => {
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// DELETE Request (for before reseeding)
+// DELETE Request (deleted all listings)
 router.route("/listings/").delete((req, res) => {
   schema.Listing.deleteMany({})
     .then((deletionMetadata) => {

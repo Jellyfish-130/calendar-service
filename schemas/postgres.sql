@@ -1,76 +1,36 @@
-CREATE SCHEMA calender_service;
+DROP SCHEMA IF EXISTS calendar_service;
 
-CREATE TABLE calender_service.listings (
-  day_id INTEGER REFERENCES calender_service.day(day_id),
-  reservation_id INTEGER REFERENCES calender_service.reservation(reservation_id),
+CREATE SCHEMA calendar_service;
+
+CREATE TABLE calendar_service.listings (
+  listing_id SERIAL PRIMARY KEY,
   weekend_pricing BOOLEAN,
-  cleaning_fee INTEGER,
-  lowest_price INTEGER,
-  rating INTEGER,
-  reviews INTEGER,
-)
+  cleaning_fee INTEGER NOT NULL,
+  lowest_price INTEGER NOT NULL,
+  rating NUMERIC,
+  reviews INTEGER
+);
 
-CREATE TABLE calender_service.day (
-  day_id INTEGER,
+CREATE TABLE calendar_service.day (
+  listing_id INTEGER REFERENCES calendar_service.listings (listing_id),
+  day_id SERIAL PRIMARY KEY,
   date DATE,
   booked BOOLEAN,
-  price INTEGER,
-  minimum_nights INTEGER,
-)
+  price INTEGER CHECK (price > 0),
+  minimum_nights INTEGER CHECK (0 < minimum_nights < 3)
+);
 
-CREATE TABLE calender_service.reservation (
-  reservation_id INTEGER,
+CREATE TABLE calendar_service.reservation (
+  listing_id INTEGER REFERENCES calendar_service.listings (listing_id),
+  reservation_id SERIAL PRIMARY KEY,
   check_in TEXT,
   check_out TEXT,
-)
-
-CREATE TABLE calender_service.guests (
-  adults INTEGER,
-  children INTEGER,
-  infants INTEGER,
-)
-
-CREATE TABLE calender_service.fees (
-  listing_id INTEGER REFERENCES calender_service.listings (listing_id),
-  cleaning_fee INTEGER,
-  base_price INTEGER,
-  service_fee INTEGER,
-  taxes INTEGER,
-  total INTEGER,
-)
-
-
--- const listingSchema = new Schema({
---   listing_id: Number,
---   days: [
---     [{
---       date: Date,
---       booked: Boolean,
---       price: Number,
---       minimumNights: Number,
---     }],
---   ],
---   reservations: [
---     {
---       checkIn: String,
---       checkOut: String,
---       guests: {
---         adults: Number,
---         children: Number,
---         infants: Number,
---       },
---       fees: {
---         cleaningFee: Number,
---         basePrice: Number,
---         serviceFee: Number,
---         taxes: Number,
---         total: Number,
---       },
---     },
---   ],
---   weekendPricing: Boolean,
---   cleaningFee: Number,
---   lowestPrice: Number,
---   rating: Number,
---   reviews: Number,
--- });
+  guest_adults INTEGER,
+  guest_children INTEGER,
+  guest_infants INTEGER,
+  fees_cleaning_fee INTEGER NOT NULL,
+  fees_base_price INTEGER NOT NULL,
+  fees_service_fee INTEGER NOT NULL,
+  fees_taxes INTEGER NOT NULL,
+  fees_total INTEGER NOT NULL
+);
