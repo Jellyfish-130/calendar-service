@@ -8,33 +8,38 @@ const utc = require("dayjs/plugin/utc");
 
 dayjs.extend(utc);
 
-// POST Request: add reservation to listing
-router.route("listings/:listingId/reservation/").post((req, res) => {
+// POST Request: add reservation by listing ID
+router.route("/listings/:listingId/reservations/").post((req, res) => {
   const { listingId } = req.params;
-  const { newBooking, days } = req.body;
+  const { newBooking } = req.body;
 
   schema.Listing.findOne({ listing_id: listingId }).then((listing) => {
-    newBooking.fees = getFees(listing, newBooking, days);
-    newBooking.id = Math.floor(100000 * Math.random()) + 1;
+    newBooking.fees = getFees(listing, newBooking);
 
-    schema.Listing.updateOne(
-      { listing_id: listingId },
-      { $push: { reservations: newBooking }, days },
-      { returnNewDocument: true }
-    )
-      .then((updateMetadata) => {
-        res.status(200).send({
-          success: true,
-          updatedCount: updateMetadata.nModified,
-        });
-      })
-      .catch((err) => res.status(400).send(`Error: ${err}`));
+    listing.reservations.push(newBooking);
+
+    listing.save((data) => {
+      res.status(200).send(newBooking);
+    });
+
+    // schema.Listing.updateOne(
+    //   { listing_id: listingId },
+    //   { $push: { reservations: newBooking } },
+    //   { returnNewDocument: true }
+    // )
+    //   .then((updateMetadata) => {
+
+    //   })
+    //   .catch((err) => res.status(400).send(`Error: ${err}`));
   });
 });
 
-function getFees(listing, booking, days) {
-  const { cleaningFee } = listing;
-  const { checkIn, checkOut } = booking;
+function getFees(listing, booking) {
+  const { cleaningFee, days } = listing;
+  let { checkIn, checkOut } = booking;
+
+  checkIn = new Date(checkIn);
+  checkOut = new Date(checkOut);
 
   const nightCount =
     Math.floor(
@@ -55,6 +60,9 @@ function getFees(listing, booking, days) {
   // Create an array of the date objects of all selected dates
   const nights = [];
   const bookHold = [];
+
+  const selectedMonthIndex = checkIn.getMonth();
+  const selectedDayIndex = checkIn.getDate();
 
   for (let months = selectedMonthIndex; months < days.length; months += 1) {
     for (let day = selectedDayIndex; day < days[months].length; day += 1) {
@@ -86,14 +94,14 @@ function getFees(listing, booking, days) {
   };
 }
 
-// **GET Request (get all listings)
+// **GET Request: get all listings
 router.route("/listings/").get((req, res) => {
   schema.Listing.find()
     .then((listings) => res.status(200).send(listings))
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **GET Request (get listing by ID)
+// **GET Request: get listing by listing ID
 router.route("/listings/:listingId").get((req, res) => {
   const { listingId } = req.params;
   schema.Listing.findOne({ listing_id: listingId })
@@ -101,15 +109,23 @@ router.route("/listings/:listingId").get((req, res) => {
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **PATCH Request (adding booking to listing by ID)
+// **GET Request: get reservations by listing ID
+router.route("/listings/:listingId/reservations").get((req, res) => {
+  const { listingId } = req.params;
+  schema.Listing.findOne({ listing_id: listingId })
+    .then((listing) => res.status(200).send(listing.reservations))
+    .catch((err) => res.status(400).send(`Error: ${err}`));
+});
+
+// **PATCH Request: change reservation by listing ID and reservation ID
 router
-  .route("/listings/:listingId/reservation/:reservationId")
+  .route("/listings/:listingId/reservations/:reservationId")
   .patch((req, res) => {
     const { listingId, reservationId } = req.params;
-    const { updatedBooking, days } = req.body;
+    const { updatedBooking } = req.body;
 
     schema.Listing.findOne({ listing_id: listingId }).then((listing) => {
-      updatedBooking.fees = getFees(listing, updatedBooking, days);
+      updatedBooking.fees = getFees(listing, updatedBooking);
 
       const { reservations } = listing;
 
@@ -121,20 +137,17 @@ router
 
       schema.Listing.updateOne(
         { listing_id: listingId },
-        { reservations, days },
+        { reservations },
         { returnNewDocument: true }
       )
         .then((updateMetadata) => {
-          res.status(200).send({
-            success: true,
-            updatedCount: updateMetadata.nModified,
-          });
+          res.status(200).send(updatedBooking);
         })
         .catch((err) => res.status(400).send(`Error: ${err}`));
     });
   });
 
-// DELETE Request (deleted all listings)
+// DELETE Request: delete reservation by listing ID and reservation ID
 router
   .route("/listings/:listingId/reservations/:reservationId")
   .delete((req, res) => {
