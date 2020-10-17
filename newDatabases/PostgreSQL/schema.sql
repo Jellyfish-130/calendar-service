@@ -2,7 +2,7 @@ DROP SCHEMA calendar_service CASCADE;
 
 CREATE SCHEMA calendar_service;
 
-CREATE TABLE calendar_service.listings (
+CREATE TABLE calendar_service.listing (
   listing_id SERIAL PRIMARY KEY,
   weekend_pricing BOOLEAN,
   cleaning_fee INTEGER NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE calendar_service.day (
   minimum_nights INTEGER CHECK (minimum_nights > 0 AND minimum_nights < 3)
 );
 
-CREATE TABLE calendar_service.users (
+CREATE TABLE calendar_service.user (
   user_id SERIAL PRIMARY KEY,
   email VARCHAR(100) NOT NULL,
   username VARCHAR(24) NOT NULL

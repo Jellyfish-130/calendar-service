@@ -3,7 +3,7 @@ const router = require("express").Router();
 const db = require("../database/connectToDatabaseRemote.js");
 
 setTimeout(() => {
-  const schema = require("../schemas/mongodb.js");
+  const schema = require("../database/schema.js");
 
   schema.Listing.findOne({ listing_id: "98" })
     .then((listing) => {

@@ -7,7 +7,7 @@ dayjs.extend(utc);
 
 // eslint-disable-next-line no-unused-vars
 const db = require("./connectToDatabaseRemote.js");
-const schema = require("../schemas/mongodb.js");
+const schema = require("../database/schema.js");
 
 const reSeed = async () => {
   let listCount = 1;

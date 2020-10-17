@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const schema = require("../schemas/mongodb.js");
+const schema = require("../database/schema.js");
 
 /* eslint-disable no-console */
 const dayjs = require("dayjs");
