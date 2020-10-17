@@ -19,7 +19,7 @@ router.route("/listings/:listingId/reservations/").post((req, res) => {
     listing.reservations.push(newBooking);
 
     listing.save((data) => {
-      res.status(200).send(newBooking);
+      res.status(201).send(newBooking);
     });
 
     // schema.Listing.updateOne(
@@ -169,7 +169,7 @@ router
         { returnNewDocument: true }
       )
         .then((updateMetadata) => {
-          res.status(200).send({
+          res.status(204).send({
             success: true,
             updatedCount: updateMetadata.nModified,
           });

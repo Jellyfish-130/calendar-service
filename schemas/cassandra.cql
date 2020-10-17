@@ -26,7 +26,7 @@ CREATE TABLE days_by_listing (
 
 CREATE TABLE reservations_by_user (
   reservation_id uuid,
-  username text,
+  user_id int,
   check_in text,
   check_out text,
   guest_adults int,
@@ -37,7 +37,23 @@ CREATE TABLE reservations_by_user (
   fees_service_fee int,
   fees_taxes int,
   fees_total int,
-  PRIMARY KEY (username, reservation_id)
+  PRIMARY KEY (user_id, reservation_id)
+);
+
+CREATE TABLE reservations_by_listing (
+  reservation_id uuid,
+  listing_id int,
+  check_in text,
+  check_out text,
+  guest_adults int,
+  guest_children int,
+  guest_infants int,
+  fees_cleaning_fee int,
+  fees_base_price int,
+  fees_service_fee int,
+  fees_taxes int,
+  fees_total int,
+  PRIMARY KEY (listing_id, reservation_id)
 );
 
 WITH CLUSTERING ORDER BY (days_by_listing ASCENDING)

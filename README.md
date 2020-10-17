@@ -107,6 +107,7 @@ npm install
 
 ```json
 {
+  "reservation_id": 1,
   "checkIn": "2020-11-15T13:00:00.000Z",
   "checkOut": "2020-11-17T13:00:00.000Z",
   "guests": {
@@ -114,6 +115,7 @@ npm install
     "children": 0,
     "infants": 0
   },
+  "user_id": 1,
   "username": "catastrausphic",
   "email": "catherinestraus@berkeley.edu",
   "fees": {
@@ -140,7 +142,7 @@ npm install
         "days": [
             [
                 {
-                    "_id": "5f8a593d44199eafae1ff19a",
+                    "day_id": 1,
                     "date": "2020-10-01T13:00:00.000Z",
                     "booked": true,
                     "price": 417,
@@ -148,7 +150,6 @@ npm install
                 },...
             ]...
         ],
-         "_id": "5f8a593d44199eafae1ff199",
         "listing_id": 1,
         "cleaningFee": 72,
         "weekendPricing": false,
@@ -156,7 +157,6 @@ npm install
         "rating": 3.33,
         "reviews": 1306,
         "reservations": [],
-        "__v": 0
     },...
 ]
 ```
@@ -179,7 +179,7 @@ npm install
     "days": [
         [
             {
-                "_id": "5f8a593f44199eafae2070d8",
+                "day_id": 1,
                 "date": "2020-10-01T13:00:00.000Z",
                 "booked": false,
                 "price": 323,
@@ -187,7 +187,6 @@ npm install
             },...
         ]...
     ],
-    "_id": "5f8a593f44199eafae2070d7",
     "listing_id": 90,
     "cleaningFee": 85,
     "weekendPricing": false,
@@ -195,7 +194,6 @@ npm install
     "rating": 3.86,
     "reviews": 952,
     "reservations": [],
-    "__v": 0
 }
 ```
 
@@ -227,12 +225,13 @@ npm install
       "taxes": 9,
       "total": 901
     },
-    "_id": "5f8a5a611381c4aef91fccff",
+    "reservation_id": 1,
     "checkIn": "2020-11-15T13:00:00.000Z",
     "checkOut": "2020-11-17T13:00:00.000Z",
+    "user_id": 1,
     "username": "catastrausphic",
     "email": "catherinestraus@berkeley.edu"
-  }
+  },...
 ]
 ```
 
@@ -244,11 +243,13 @@ npm install
 
 - `listingId` listing id
 - `reservationId` reservation id
-- Ex: `/api/listings/95/reservations/5f8a5a611381c4aef91fccff/`
+- Ex: `/api/listings/95/reservations/1/`
 
-**Success Status Code:** `204`
+**Success Status Code:** `200`
 
 **Request Body:** JSON
+
+- Note: accepts JSON with any of the following keys.
 
 ```json
 {
@@ -266,6 +267,7 @@ npm install
 
 ```json
 {
+  "reservation_id": 1,
   "checkIn": "2020-11-15T13:00:00.000Z",
   "checkOut": "2020-11-17T13:00:00.000Z",
   "guests": {
@@ -273,6 +275,7 @@ npm install
     "children": 0,
     "infants": 0
   },
+  "user_id": 1,
   "username": "catastrausphic",
   "email": "catherinestraus@berkeley.edu",
   "fees": {
@@ -293,7 +296,7 @@ npm install
 
 - `listingId` listing id
 - `reservationId` reservation id
-- Ex: `/api/listings/95/reservations/5f8a5a611381c4aef91fccff/`
+- Ex: `/api/listings/95/reservations/1/`
 
 **Success Status Code:** `204`
 

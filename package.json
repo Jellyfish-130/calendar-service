@@ -10,7 +10,7 @@
     "test": "jest",
     "start-dev": "nodemon server/server.js --watch",
     "start": "node server/server.js",
-    "seed": "node database/seed.js"
+    "seed": "node schemas/mongodb-seed.js"
   },
   "repository": {
     "type": "git",
