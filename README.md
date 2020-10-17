@@ -80,9 +80,9 @@ npm install
 
 ### Seed listings
 
-- POST `/api/booking/listings`
+- POST `/api/listings`
 
-**Description:** `Seeds 100 day arrays, each with 182 objects, and each day array is followed up with a blank reservation array.`
+**Description:** `Add 100 day arrays, each with 182 objects, and each day array is followed up with a blank reservation array.`
 
 **Success Status Code:** `201`
 
@@ -117,7 +117,7 @@ npm install
 
 ### Get all listings
 
-- GET `/api/booking/listings`
+- GET `/api/listings`
 
 **Description:** `Gets all listings, but unlike with the POST data, a day array is followed up with a reservation array that includes guests, fees, checkIn and checkOut based on selected dates to stay.`
 
@@ -171,12 +171,12 @@ npm install
 
 ### Get listing by ID
 
-- GET `/api/booking/listings/:listingId`
+- GET `/api/listings/:listingId`
 
 **Path Parameters:**
 
 - `listingId` date id
-- Ex: `/api/booking/listings/91`
+- Ex: `/api/listings/91`
 
 **Description:** `Gets listings by ID, which are from 1 -100, inclusive.`
 
@@ -188,15 +188,13 @@ npm install
 [
   {
     "days": [
-      [
-        {
-          "_id": "5f89fa9aa716c1d7b8f5e59e",
-          "date": "2021-03-31T14:00:00.000Z",
-          "booked": true,
-          "price": 355,
-          "minimumNights": 1
-        },...
-      ]
+      {
+        "_id": "5f89fa9aa716c1d7b8f5e59e",
+        "date": "2021-03-31T14:00:00.000Z",
+        "booked": true,
+        "price": 355,
+        "minimumNights": 1
+      },...
     ],
     "_id": "5f89fa9aa716c1d7b8f5e4e8",
     "listing_id": 33,
@@ -230,12 +228,13 @@ npm install
 
 ### Add booking to listing by ID
 
-- PATCH `/api/booking/listings/:listingId/reservation/`
+- POST `/api/listings/:listingId/reservation/`
+- PATCH `/api/listings/:listingId/reservation/:reservationId`
 
 **Path Parameters:**
 
 - `listingId` date id
-- Ex: `/api/booking/listings/91/reservation`
+- Ex: `/api/listings/91/reservation`
 
 **Description:** `Add reservation information by listing ID, which are from 1 -100, inclusive.`
 
@@ -249,24 +248,9 @@ npm install
     "checkIn": "2020-11-15T13:00:00.000Z",
     "checkOut": "2020-11-17T13:00:00.000Z",
     "guests": { "adults": 1, "children": 0, "infants": 0 },
-    "fees": {
-      "cleaningFee": 82,
-      "basePrice": 704,
-      "serviceFee": 11,
-      "taxes": 8,
-      "total": 805
-    }
-  },
-  "days": [
-    [
-      {
-        "_id": "5f87b7d17259813bc29ea552",
-        "date": "2020-10-01T13:00:00.000Z",
-        "booked": true,
-        "price": 352,
-        "minimumNights": 1
+    username
+    user email
       }
-    ]
   ]
 }
 ```
@@ -282,7 +266,7 @@ npm install
 
 ### Delete all listings
 
-- DELETE `/api/booking/listings`
+- DELETE `/api/listings`
 
 **Description:** `Delete all listings from calender.`
 

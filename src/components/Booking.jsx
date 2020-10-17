@@ -48,7 +48,7 @@ class Booking extends React.Component {
     const param = windowId || listing;
     this.setState({ currentListing: param });
 
-    fetch(`/api/booking/listings/${param}`)
+    fetch(`/api/listings/${param}`)
       .then((response) => response.json())
       .then((data) => {
         const {
@@ -300,7 +300,7 @@ class Booking extends React.Component {
     console.log("hit add");
     console.log(JSON.stringify({ newBooking, days }));
 
-    fetch(`api/booking/listings/${currentListing}/reservation/`, {
+    fetch(`api/listings/${currentListing}/reservation/`, {
       method: "PATCH", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
