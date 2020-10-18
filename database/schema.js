@@ -1,22 +1,26 @@
 /* eslint-disable no-console */
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
 const listingSchema = new Schema({
   listing_id: Number,
   days: [
-    [{
-      date: Date,
-      booked: Boolean,
-      price: Number,
-      minimumNights: Number,
-    }],
+    [
+      {
+        date: Date,
+        booked: Boolean,
+        price: Number,
+        minimumNights: Number,
+      },
+    ],
   ],
   reservations: [
     {
       checkIn: String,
       checkOut: String,
+      username: String,
+      email: String,
       guests: {
         adults: Number,
         children: Number,
@@ -38,6 +42,6 @@ const listingSchema = new Schema({
   reviews: Number,
 });
 
-const Listing = mongoose.model('Listing', listingSchema);
+const Listing = mongoose.model("Listing", listingSchema);
 
 module.exports = { Listing };

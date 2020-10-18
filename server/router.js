@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const schema = require("../schemas/mongodb.js");
+const schema = require("../database/schema.js");
 
 /* eslint-disable no-console */
 const dayjs = require("dayjs");
@@ -8,102 +8,90 @@ const utc = require("dayjs/plugin/utc");
 
 dayjs.extend(utc);
 
-// POST Request (seed listings)
-router.route("/listings/").post((req, res) => {
-  let listCount = 1;
-  let globalArray = [];
-  try {
-    for (listCount; listCount <= 100; listCount += 1) {
-      const daysArray = [];
-      const randomPrice = Math.floor(
-        faker.random.number({ min: 75, max: 450 })
-      );
-      const weekendPricing = faker.random.boolean();
-      const randomRating = faker.finance.amount(3, 4, 2);
-      const randomReviews = faker.random.number({ min: 5, max: 1500 });
+// POST Request: add reservation by listing ID
+router.route("/listings/:listingId/reservations/").post((req, res) => {
+  const { listingId } = req.params;
+  const { newBooking } = req.body;
 
-      // eslint-disable-next-line func-names
-      const getLastDay = function (yy, mm) {
-        return new Date(yy, mm + 1, 0).getDate();
-      };
+  schema.Listing.findOne({ listing_id: listingId }).then((listing) => {
+    newBooking.fees = getFees(listing, newBooking);
 
-      for (let month = 1; month <= 6; month += 1) {
-        // Construct day object to be pushed to array, 6 months worth of days
+    listing.reservations.push(newBooking);
 
-        const startDay = dayjs()
-          .startOf("month")
-          .add(month - 1, "month")
-          .toDate();
-        const startMonth = startDay.getMonth();
-        const startYear = startDay.getFullYear();
-        const lastDay = getLastDay(startYear, startMonth);
-
-        const monthArray = [];
-
-        for (let day = 1; day <= lastDay; day += 1) {
-          const newDay = dayjs(startDay)
-            .utc()
-            .add(day - 1, "day")
-            .add(6, "hours")
-            .toDate();
-          const date = {
-            date: newDay,
-            booked: faker.random.boolean(),
-            price: randomPrice,
-            minimumNights: 1,
-          };
-
-          if (weekendPricing) {
-            // Make weekends more expensive
-            if (newDay.getDay() >= 5) {
-              date.price = Math.floor(Number(date.price * 1.2));
-            }
-
-            // Make a two day minimum on Fridays
-            if (newDay.getDay() === 5) {
-              date.minimumNights = 2;
-            }
-          }
-          // Set service fee
-          date.serviceFee = Math.floor(Number(date.price * 0.142));
-          monthArray.push(date);
-        }
-        daysArray.push(monthArray);
-      }
-
-      const newListing = new schema.Listing({
-        listing_id: listCount,
-        days: daysArray,
-        cleaningFee: faker.random.number({ min: 50, max: 100 }),
-        weekendPricing,
-        lowestPrice: randomPrice,
-        rating: randomRating,
-        reviews: randomReviews,
-      });
-
-      newListing.save((err) => {
-        globalArray.push(newListing);
-
-        if (globalArray.length === 100) {
-          res.status(201).send(globalArray);
-        }
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log(`${listCount - 1} new listings created.`);
-  }
+    listing.save((data) => {
+      res.status(201).send(newBooking);
+    });
+  });
 });
 
-// **GET Request (get all listings)
+function getFees(listing, booking) {
+  const { cleaningFee, days } = listing;
+  let { checkIn, checkOut } = booking;
+
+  checkIn = new Date(checkIn);
+  checkOut = new Date(checkOut);
+
+  const nightCount =
+    Math.floor(
+      // eslint-disable-next-line max-len
+      (Date.UTC(
+        checkOut.getFullYear(),
+        checkOut.getMonth(),
+        checkOut.getDate()
+      ) -
+        Date.UTC(
+          checkIn.getFullYear(),
+          checkIn.getMonth(),
+          checkIn.getDate()
+        )) /
+        (1000 * 60 * 60 * 24)
+    ) + 1;
+
+  // Create an array of the date objects of all selected dates
+  const nights = [];
+  const bookHold = [];
+
+  const selectedMonthIndex = checkIn.getMonth();
+  const selectedDayIndex = checkIn.getDate();
+
+  for (let months = selectedMonthIndex; months < days.length; months += 1) {
+    for (let day = selectedDayIndex; day < days[months].length; day += 1) {
+      if (nights.length < nightCount) {
+        nights.push(days[months][day - 2]);
+        bookHold.push([months, day - 2]);
+      }
+    }
+  }
+
+  nights.pop();
+
+  const initial = 0;
+  // eslint-disable-next-line max-len
+  const basePrice = nights.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.price,
+    initial
+  );
+  const serviceFee = Math.ceil(basePrice * 0.07);
+  const taxes = Math.ceil(basePrice * 0.0725);
+  const total = basePrice + cleaningFee + serviceFee + taxes;
+
+  return {
+    cleaningFee: cleaningFee,
+    basePrice: basePrice,
+    serviceFee: serviceFee,
+    taxes: taxes,
+    total: total,
+  };
+}
+
+// **GET Request: get all listings
 router.route("/listings/").get((req, res) => {
   schema.Listing.find()
     .then((listings) => res.status(200).send(listings))
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **GET Request (get listing by ID)
+// **GET Request: get listing by listing ID
 router.route("/listings/:listingId").get((req, res) => {
   const { listingId } = req.params;
   schema.Listing.findOne({ listing_id: listingId })
@@ -111,36 +99,73 @@ router.route("/listings/:listingId").get((req, res) => {
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// **PATCH Request (adding booking to listing by ID)
-router.route("/listings/:listingId/reservation").patch((req, res) => {
+// **GET Request: get reservations by listing ID
+router.route("/listings/:listingId/reservations").get((req, res) => {
   const { listingId } = req.params;
-  const { newBooking } = req.body;
-  const { days } = req.body;
-
-  schema.Listing.updateOne(
-    { listing_id: listingId },
-    { $push: { reservations: newBooking }, days },
-    { returnNewDocument: true }
-  )
-    .then((updateMetadata) => {
-      res.status(200).send({
-        success: true,
-        updatedCount: updateMetadata.nModified,
-      });
-    })
+  schema.Listing.findOne({ listing_id: listingId })
+    .then((listing) => res.status(200).send(listing.reservations))
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
 
-// DELETE Request (deleted all listings)
-router.route("/listings/").delete((req, res) => {
-  schema.Listing.deleteMany({})
-    .then((deletionMetadata) => {
-      res.status(200).send({
-        success: true,
-        deletedCount: deletionMetadata.deletedCount,
-      });
-    })
-    .catch((err) => res.status(400).send(`Error: ${err}`));
-});
+// **PATCH Request: change reservation by listing ID and reservation ID
+router
+  .route("/listings/:listingId/reservations/:reservationId")
+  .patch((req, res) => {
+    const { listingId, reservationId } = req.params;
+    const { updatedBooking } = req.body;
+
+    schema.Listing.findOne({ listing_id: listingId }).then((listing) => {
+      updatedBooking.fees = getFees(listing, updatedBooking);
+
+      const { reservations } = listing;
+
+      const existingReservation = reservations.find(
+        (r) => r.id === reservationId
+      );
+
+      Object.assign(existingReservation, updatedBooking);
+
+      schema.Listing.updateOne(
+        { listing_id: listingId },
+        { reservations },
+        { returnNewDocument: true }
+      )
+        .then((updateMetadata) => {
+          res.status(200).send(updatedBooking);
+        })
+        .catch((err) => res.status(400).send(`Error: ${err}`));
+    });
+  });
+
+// DELETE Request: delete reservation by listing ID and reservation ID
+router
+  .route("/listings/:listingId/reservations/:reservationId")
+  .delete((req, res) => {
+    const { listingId, reservationId } = req.params;
+
+    schema.Listing.findOne({ listing_id: listingId }).then((listing) => {
+      const { reservations } = listing;
+
+      const reservationIndex = reservations.findIndex(
+        (r) => r.id === reservationId
+      );
+
+      // Delete from reservations array
+      reservations.splice(reservationIndex, 1);
+
+      schema.Listing.updateOne(
+        { listing_id: listingId },
+        { reservations },
+        { returnNewDocument: true }
+      )
+        .then((updateMetadata) => {
+          res.status(204).send({
+            success: true,
+            updatedCount: updateMetadata.nModified,
+          });
+        })
+        .catch((err) => res.status(400).send(`Error: ${err}`));
+    });
+  });
 
 module.exports = router;

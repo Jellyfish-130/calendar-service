@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-const dayjs = require('dayjs');
-const faker = require('faker');
-const utc = require('dayjs/plugin/utc');
+const dayjs = require("dayjs");
+const faker = require("faker");
+const utc = require("dayjs/plugin/utc");
 
 dayjs.extend(utc);
 
 // eslint-disable-next-line no-unused-vars
-const db = require('./connectToDatabaseRemote.js');
-const schema = require('./schema.js');
+const db = require("./connectToDatabaseRemote.js");
+const schema = require("../database/schema.js");
 
 const reSeed = async () => {
   let listCount = 1;
@@ -16,7 +16,9 @@ const reSeed = async () => {
     await schema.Listing.deleteMany({});
     for (listCount; listCount <= 100; listCount += 1) {
       const daysArray = [];
-      const randomPrice = Math.floor(faker.random.number({ min: 75, max: 450 }));
+      const randomPrice = Math.floor(
+        faker.random.number({ min: 75, max: 450 })
+      );
       const weekendPricing = faker.random.boolean();
       const randomRating = faker.finance.amount(3, 4, 2);
       const randomReviews = faker.random.number({ min: 5, max: 1500 });
@@ -26,10 +28,13 @@ const reSeed = async () => {
         return new Date(yy, mm + 1, 0).getDate();
       };
 
-      for (let month = 1; month <= 6; month += 1) {
+      for (let month = 1; month <= 12; month += 1) {
         // Construct day object to be pushed to array, 6 months worth of days
 
-        const startDay = dayjs().startOf('month').add(month - 1, 'month').toDate();
+        const startDay = dayjs()
+          .startOf("month")
+          .add(month - 1, "month")
+          .toDate();
         const startMonth = startDay.getMonth();
         const startYear = startDay.getFullYear();
         const lastDay = getLastDay(startYear, startMonth);
@@ -37,7 +42,10 @@ const reSeed = async () => {
         const monthArray = [];
 
         for (let day = 1; day <= lastDay; day += 1) {
-          const newDay = dayjs(startDay).utc().add(day - 1, 'day').add(6, 'hours')
+          const newDay = dayjs(startDay)
+            .utc()
+            .add(day - 1, "day")
+            .add(6, "hours")
             .toDate();
           const date = {
             date: newDay,

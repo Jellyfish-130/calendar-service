@@ -78,164 +78,18 @@ npm install
 
 ## API Endpoints
 
-### Seed listings
+### Add reservation by listing ID
 
-- POST `/api/booking/listings`
+- POST `/api/listings/:listingId/reservations/`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- Ex: `/api/listings/97/reservations/`
 
 **Success Status Code:** `201`
 
-**Returns:** JSON
-
-```json
-[
-  {
-    "days": [
-      [
-        {
-          "_id": "5f87877a925bba0f2706b108",
-          "date": "2021-03-31T14:00:00.000Z",
-          "booked": true,
-          "price": 180,
-          "minimumNights": 1
-        }
-      ]
-    ],
-    "_id": "5f87877a925bba0f2706b052",
-    "listing_id": 1,
-    "cleaningFee": 70,
-    "weekendPricing": true,
-    "lowestPrice": 180,
-    "rating": 3.94,
-    "reviews": 745,
-    "reservations": [],
-    "__v": 0
-  }
-]
-```
-
-### Get all listings
-
-- GET `/api/booking/listings`
-
-**Success Status Code:** `200`
-
-**Returns:** JSON
-
-```json
-[
-  {
-    "days": [
-      [
-        {
-          "_id": "5f87877a925bba0f2706b108",
-          "date": "2021-03-31T14:00:00.000Z",
-          "booked": true,
-          "price": 180,
-          "minimumNights": 1
-        }
-      ]
-    ],
-    "_id": "5f87877a925bba0f2706b052",
-    "listing_id": 1,
-    "cleaningFee": 70,
-    "weekendPricing": true,
-    "lowestPrice": 180,
-    "rating": 3.94,
-    "reviews": 745,
-    "reservations": [
-      {
-        "guests": {
-          "adults": 1,
-          "children": 0,
-          "infants": 0
-        },
-        "fees": {
-          "cleaningFee": 70,
-          "basePrice": 592,
-          "serviceFee": 9,
-          "taxes": 7,
-          "total": 695
-        },
-        "_id": "5f88f915a716c1d7b8f5cb2d",
-        "checkIn": "2020-10-19T13:00:00.000Z",
-        "checkOut": "2020-10-21T13:00:00.000Z"
-      }
-    ],
-    "__v": 0
-  }
-]
-```
-
-### Get listing by ID
-
-- GET `/api/booking/listings/:listingId`
-
-**Path Parameters:**
-
-- `listingId` date id
-- Ex: `/api/booking/listings/91`
-
-**Success Status Code:** `200`
-
-**Returns:** JSON
-
-```json
-[
-  {
-    "days": [
-      [
-        {
-          "_id": "5f87877a925bba0f2706b108",
-          "date": "2021-03-31T14:00:00.000Z",
-          "booked": true,
-          "price": 180,
-          "minimumNights": 1
-        }
-      ]
-    ],
-    "_id": "5f87877a925bba0f2706b052",
-    "listing_id": 1,
-    "cleaningFee": 70,
-    "weekendPricing": true,
-    "lowestPrice": 180,
-    "rating": 3.94,
-    "reviews": 745,
-    "reservations": [
-      {
-        "guests": {
-          "adults": 1,
-          "children": 0,
-          "infants": 0
-        },
-        "fees": {
-          "cleaningFee": 70,
-          "basePrice": 592,
-          "serviceFee": 9,
-          "taxes": 7,
-          "total": 695
-        },
-        "_id": "5f88f915a716c1d7b8f5cb2d",
-        "checkIn": "2020-10-19T13:00:00.000Z",
-        "checkOut": "2020-10-21T13:00:00.000Z"
-      }
-    ],
-    "__v": 0
-  }
-]
-```
-
-### Add booking to listing by ID
-
-- PATCH `/api/booking/listings/:listingId/reservation/`
-
-**Path Parameters:**
-
-- `listingId` date id
-- Ex: `/api/booking/listings/91/reservation`
-
-**Success Status Code:** `204`
-
-**Body:** JSON
+**Request Body:** JSON
 
 ```json
 {
@@ -243,25 +97,9 @@ npm install
     "checkIn": "2020-11-15T13:00:00.000Z",
     "checkOut": "2020-11-17T13:00:00.000Z",
     "guests": { "adults": 1, "children": 0, "infants": 0 },
-    "fees": {
-      "cleaningFee": 82,
-      "basePrice": 704,
-      "serviceFee": 11,
-      "taxes": 8,
-      "total": 805
-    }
-  },
-  "days": [
-    [
-      {
-        "_id": "5f87b7d17259813bc29ea552",
-        "date": "2020-10-01T13:00:00.000Z",
-        "booked": true,
-        "price": 352,
-        "minimumNights": 1
-      }
-    ]
-  ]
+    "username": "catastrausphic",
+    "email": "catherinestraus@berkeley.edu"
+  }
 }
 ```
 
@@ -269,14 +107,196 @@ npm install
 
 ```json
 {
-  "success": true,
-  "updatedCount": 1
+  "reservation_id": 1,
+  "checkIn": "2020-11-15T13:00:00.000Z",
+  "checkOut": "2020-11-17T13:00:00.000Z",
+  "guests": {
+    "adults": 1,
+    "children": 0,
+    "infants": 0
+  },
+  "user_id": 1,
+  "username": "catastrausphic",
+  "email": "catherinestraus@berkeley.edu",
+  "fees": {
+    "cleaningFee": 98,
+    "basePrice": 782,
+    "serviceFee": 12,
+    "taxes": 9,
+    "total": 901
+  }
 }
 ```
 
-### Delete all listings
+### Get all listings
 
-- DELETE `/api/booking/listings`
+- GET `/api/listings/`
+
+**Success Status Code:** `200`
+
+**Returns:** JSON
+
+```json
+[
+    {
+        "days": [
+            [
+                {
+                    "day_id": 1,
+                    "date": "2020-10-01T13:00:00.000Z",
+                    "booked": true,
+                    "price": 417,
+                    "minimumNights": 1
+                },...
+            ]...
+        ],
+        "listing_id": 1,
+        "cleaningFee": 72,
+        "weekendPricing": false,
+        "lowestPrice": 417,
+        "rating": 3.33,
+        "reviews": 1306,
+        "reservations": [],
+    },...
+]
+```
+
+### Get listing by listing ID
+
+- GET `/api/listings/:listingId/`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- Ex: `/api/listings/90/`
+
+**Success Status Code:** `200`
+
+**Returns:** JSON
+
+```json
+{
+    "days": [
+        [
+            {
+                "day_id": 1,
+                "date": "2020-10-01T13:00:00.000Z",
+                "booked": false,
+                "price": 323,
+                "minimumNights": 1
+            },...
+        ]...
+    ],
+    "listing_id": 90,
+    "cleaningFee": 85,
+    "weekendPricing": false,
+    "lowestPrice": 323,
+    "rating": 3.86,
+    "reviews": 952,
+    "reservations": [],
+}
+```
+
+### Get reservations by listing ID
+
+- GET `/api/listings/:listingId/reservations/`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- Ex: `/api/listings/95/reservations/`
+
+**Success Status Code:** `200`
+
+**Returns:** JSON
+
+```json
+[
+  {
+    "guests": {
+      "adults": 1,
+      "children": 0,
+      "infants": 0
+    },
+    "fees": {
+      "cleaningFee": 98,
+      "basePrice": 782,
+      "serviceFee": 12,
+      "taxes": 9,
+      "total": 901
+    },
+    "reservation_id": 1,
+    "checkIn": "2020-11-15T13:00:00.000Z",
+    "checkOut": "2020-11-17T13:00:00.000Z",
+    "user_id": 1,
+    "username": "catastrausphic",
+    "email": "catherinestraus@berkeley.edu"
+  },...
+]
+```
+
+### Change reservation by listing ID and reservation ID
+
+- PATCH `/api/listings/:listingId/reservations/:reservationId/`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- `reservationId` reservation id
+- Ex: `/api/listings/95/reservations/1/`
+
+**Success Status Code:** `200`
+
+**Request Body:** JSON
+
+- Note: accepts JSON with any of the following keys.
+
+```json
+{
+  "updatedBooking": {
+    "checkIn": "2020-11-15T13:00:00.000Z",
+    "checkOut": "2020-11-17T13:00:00.000Z",
+    "guests": { "adults": 3, "children": 0, "infants": 0 },
+    "username": "catastrausphic",
+    "email": "catherinestraus@berkeley.edu"
+  }
+}
+```
+
+**Returns:** JSON
+
+```json
+{
+  "reservation_id": 1,
+  "checkIn": "2020-11-15T13:00:00.000Z",
+  "checkOut": "2020-11-17T13:00:00.000Z",
+  "guests": {
+    "adults": 3,
+    "children": 0,
+    "infants": 0
+  },
+  "user_id": 1,
+  "username": "catastrausphic",
+  "email": "catherinestraus@berkeley.edu",
+  "fees": {
+    "cleaningFee": 98,
+    "basePrice": 782,
+    "serviceFee": 12,
+    "taxes": 9,
+    "total": 901
+  }
+}
+```
+
+### Delete reservation by listing ID and reservation ID
+
+- DELETE `/api/listings/:listingId/reservations/:reservationId`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- `reservationId` reservation id
+- Ex: `/api/listings/95/reservations/1/`
 
 **Success Status Code:** `204`
 
@@ -285,6 +305,6 @@ npm install
 ```json
 {
   "success": true,
-  "deletedCount": 100
+  "updatedCount": 1
 }
 ```
