@@ -12,10 +12,7 @@ client
   .connect()
   .then(() => console.log("Connected successfully"))
   .then(() =>
-    client.query("INSERT INTO calendar_service.lisitngs values (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews)", [a, b])
-  )
-  .then(() =>
-    client.query("INSERT INTO calendar_service.lisitngs values (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews)", [a, b])
+    client.query("INSERT INTO calendar_service.lisitngs values (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews)", [...])
   )
   .then(() => client.query("SELECT * FROM calendar_service.listings"))
   .then((results) => console.table(results.rows))

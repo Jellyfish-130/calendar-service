@@ -33,6 +33,7 @@ const date = (num) => {
           .toDate();
         const date = {
           day_id: day_id,
+          listing_id: Math.floor(faker.random.number({ min: 0, max: 9 })),
           date: newDay,
           booked: faker.random.boolean(),
           price: Math.floor(faker.random.number({ min: 75, max: 450 })),
@@ -49,6 +50,7 @@ const csvWriter = createCsvWriter({
   path: "./newDatabases/PostgreSQL/CSV/days.csv",
   header: [
     { id: "day_id", title: "day_id" },
+    { id: "listing_id", title: "listing_id" },
     { id: "date", title: "date" },
     { id: "booked", title: "booked" },
     { id: "price", title: "price" },

@@ -71,8 +71,8 @@ function getFees(listing, booking) {
     (accumulator, currentValue) => accumulator + currentValue.price,
     initial
   );
-  const serviceFee = Math.ceil(basePrice * 0.0148);
-  const taxes = Math.ceil(basePrice * 0.011);
+  const serviceFee = Math.ceil(basePrice * 0.07);
+  const taxes = Math.ceil(basePrice * 0.0725);
   const total = basePrice + cleaningFee + serviceFee + taxes;
 
   return {
