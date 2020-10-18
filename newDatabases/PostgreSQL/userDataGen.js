@@ -6,8 +6,8 @@ const user = (num) => {
   for (let i = 0; i < num; i++) {
     let entry = {
       user_id: i,
-      username: ,
-      email:
+      username: faker.internet.userName(),
+      email: faker.internet.email(),
     };
     users.push(entry);
   }

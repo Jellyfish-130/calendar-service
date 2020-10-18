@@ -21,16 +21,6 @@ router.route("/listings/:listingId/reservations/").post((req, res) => {
     listing.save((data) => {
       res.status(201).send(newBooking);
     });
-
-    // schema.Listing.updateOne(
-    //   { listing_id: listingId },
-    //   { $push: { reservations: newBooking } },
-    //   { returnNewDocument: true }
-    // )
-    //   .then((updateMetadata) => {
-
-    //   })
-    //   .catch((err) => res.status(400).send(`Error: ${err}`));
   });
 });
 

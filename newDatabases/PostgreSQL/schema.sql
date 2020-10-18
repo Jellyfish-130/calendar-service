@@ -22,8 +22,8 @@ CREATE TABLE calendar_service.day (
 
 CREATE TABLE calendar_service.user (
   user_id SERIAL PRIMARY KEY,
-  email VARCHAR(100) NOT NULL,
-  username VARCHAR(24) NOT NULL
+  username VARCHAR(24) NOT NULL,
+  email VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE calendar_service.reservation (
