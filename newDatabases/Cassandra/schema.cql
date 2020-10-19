@@ -4,7 +4,7 @@ CREATE KEYSPACE calender_service WITH REPLICATION = { 'class' : 'SimpleStrategy'
 
 USE calender_service;
 
-CREATE TABLE listings_by_id (
+CREATE TABLE listing_by_id (
   listing_id uuid,
   weekend_pricing boolean,
   cleaning_fee int,
@@ -14,7 +14,7 @@ CREATE TABLE listings_by_id (
   PRIMARY KEY (listing_id)
 );
 
-CREATE TABLE days_by_listing (
+CREATE TABLE days_by_listing_id (
   day_id uuid,
   listing_id uuid,
   date date,

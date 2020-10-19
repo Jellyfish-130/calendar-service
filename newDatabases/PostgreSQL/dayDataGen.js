@@ -30,7 +30,7 @@ const date = (num) => {
           .utc()
           .add(day - 1, "day")
           .add(6, "hours")
-          .toDate();
+          .format("YYYY-MM-DD");
         const date = {
           day_id: day_id,
           listing_id: Math.floor(faker.random.number({ min: 0, max: 9 })),

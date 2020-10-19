@@ -10,7 +10,7 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const reservation = (num) => {
   let startDay = dayjs().startOf("month");
-  let endDay = startDay.add(Math.floor(Math.random() * 10) + 1);
+  let endDay = startDay.add(Math.floor(Math.random() * 10) + 1, "day");
 
   let reservations = [];
   for (let i = 0; i < num; i++) {
@@ -18,16 +18,16 @@ const reservation = (num) => {
       reservation_id: i,
       user_id: Math.floor(faker.random.number({ min: 0, max: 9 })),
       listing_id: Math.floor(faker.random.number({ min: 0, max: 9 })),
-      check_in: startDay.format(),
-      check_out: endDay.format(),
+      check_in: startDay.format("YYYY-MM-DD"),
+      check_out: endDay.format("YYYY-MM-DD"),
       guest_adults: Math.floor(faker.random.number({ min: 1, max: 6 })),
       guest_children: Math.floor(faker.random.number({ min: 0, max: 5 })),
       guest_infants: Math.floor(faker.random.number({ min: 0, max: 2 })),
     };
     reservations.push(entry);
 
-    startDay = endDay.add(Math.floor(Math.random() * 10) + 1);
-    endDay = startDay.add(Math.floor(Math.random() * 10) + 1);
+    startDay = endDay.add(Math.floor(Math.random() * 10) + 1, "day");
+    endDay = startDay.add(Math.floor(Math.random() * 10) + 1, "day");
   }
   return reservations;
 };
