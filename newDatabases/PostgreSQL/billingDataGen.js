@@ -3,7 +3,7 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const billing = (num) => {
   let billings = [];
-  for (let i = 0; i < num; i++) {
+  for (let i = 1; i <= num; i++) {
     let cleaningFee = faker.random.number({ min: 50, max: 100 });
     let basePrice = faker.random.number({ min: 100, max: 1000 });
     let serviceFee = Math.ceil(basePrice * 0.07);
@@ -12,7 +12,7 @@ const billing = (num) => {
 
     let entry = {
       billing_id: i,
-      reservation_id: Math.floor(faker.random.number({ min: 0, max: 9 })),
+      reservation_id: i,
       cleaning_fee: cleaningFee,
       base_price: basePrice,
       service_fee: serviceFee,

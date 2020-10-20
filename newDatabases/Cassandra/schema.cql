@@ -5,27 +5,29 @@ CREATE KEYSPACE calender_service WITH REPLICATION = { 'class' : 'SimpleStrategy'
 USE calender_service;
 
 CREATE TABLE listing_by_id (
-  listing_id uuid,
+  listing_id int,
   weekend_pricing boolean,
   cleaning_fee int,
   lowest_price int,
-  rating int,
+  rating decimal,
   reviews int,
   PRIMARY KEY (listing_id)
 );
 
 CREATE TABLE days_by_listing_id (
-  day_id uuid,
-  listing_id uuid,
+  day_id int,
+  listing_id int,
   date date,
   booked boolean,
   price int,
   minimum_nights int,
   PRIMARY KEY (listing_id, day_id)
-);
+)
+
+WITH CLUSTERING ORDER BY (day_id DESC);
 
 CREATE TABLE reservations_by_user (
-  reservation_id uuid,
+  reservation_id int,
   user_id int,
   check_in text,
   check_out text,
@@ -41,7 +43,7 @@ CREATE TABLE reservations_by_user (
 );
 
 CREATE TABLE reservations_by_listing (
-  reservation_id uuid,
+  reservation_id int,
   listing_id int,
   check_in text,
   check_out text,
@@ -56,4 +58,10 @@ CREATE TABLE reservations_by_listing (
   PRIMARY KEY (listing_id, reservation_id)
 );
 
-WITH CLUSTERING ORDER BY (days_by_listing ASCENDING)
+COPY listing_by_id (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/listingsById.csv' WITH HEADER = TRUE;
+
+COPY days_by_listing_id (day_id, listing_id, date, booked, price, minimum_nights) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/daysByListingId.csv' WITH HEADER = TRUE;
+
+COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByUser.csv' WITH HEADER = TRUE ;
+
+COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByListing.csv' WITH HEADER = TRUE ;

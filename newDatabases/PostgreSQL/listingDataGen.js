@@ -3,7 +3,7 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const listing = (num) => {
   let listings = [];
-  for (let i = 0; i < num; i++) {
+  for (let i = 1; i <= num; i++) {
     let entry = {
       listing_id: i,
       weekend_pricing: faker.random.boolean(),

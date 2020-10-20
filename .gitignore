@@ -6,6 +6,7 @@ node_modules/
 database.config.js
 *.log
 data
+*.csv
 
 # OS generated files
 .DS_Store

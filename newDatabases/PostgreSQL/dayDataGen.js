@@ -14,7 +14,7 @@ const date = (num) => {
     return new Date(yy, mm + 1, 0).getDate();
   };
 
-  for (i = 0; i < num; i++) {
+  for (i = 1; i <= num; i++) {
     for (let month = 1; month <= 12; month += 1) {
       const startDay = dayjs()
         .startOf("month")
@@ -33,7 +33,7 @@ const date = (num) => {
           .format("YYYY-MM-DD");
         const date = {
           day_id: day_id,
-          listing_id: Math.floor(faker.random.number({ min: 0, max: 9 })),
+          listing_id: i,
           date: newDay,
           booked: faker.random.boolean(),
           price: Math.floor(faker.random.number({ min: 75, max: 450 })),
@@ -42,8 +42,8 @@ const date = (num) => {
         days.push(date);
       }
     }
-    return days;
   }
+  return days;
 };
 
 const csvWriter = createCsvWriter({
