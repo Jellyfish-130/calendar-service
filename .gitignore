@@ -7,6 +7,10 @@ database.config.js
 *.log
 data
 
+*.csv
+newDatabases/PostgreSQL/CSV/
+newDatabases/Cassandra/CSV/
+
 # OS generated files
 .DS_Store
 .DS_Store?
