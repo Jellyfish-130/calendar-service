@@ -1,7 +1,7 @@
 const faker = require("faker");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const listing = (num) => {
+const listing_by_id = (num) => {
   let listings = [];
   for (let i = 1; i <= num; i++) {
     let entry = {
@@ -18,7 +18,7 @@ const listing = (num) => {
 };
 
 const csvWriter = createCsvWriter({
-  path: "./newDatabases/PostgreSQL/CSV/listings.csv",
+  path: "./newDatabases/Cassandra/CSV/listingsById.csv",
   header: [
     { id: "listing_id", title: "listing_id" },
     { id: "weekend_pricing", title: "weekend_pricing" },
@@ -29,7 +29,7 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-let listingDump = listing(10);
+let listingDump = listing_by_id(10);
 
 csvWriter.writeRecords(listingDump).then(() => {
   console.log("Done!");

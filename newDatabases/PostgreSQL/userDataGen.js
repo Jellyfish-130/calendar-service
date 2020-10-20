@@ -3,7 +3,7 @@ const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 const user = (num) => {
   let users = [];
-  for (let i = 0; i < num; i++) {
+  for (let i = 1; i <= num; i++) {
     let entry = {
       user_id: i,
       username: faker.internet.userName(),

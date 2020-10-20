@@ -6,7 +6,7 @@ dayjs.extend(utc);
 const faker = require("faker");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const date = (num) => {
+const days_by_listing_id = (num) => {
   let days = [];
   let day_id = 0;
 
@@ -47,7 +47,7 @@ const date = (num) => {
 };
 
 const csvWriter = createCsvWriter({
-  path: "./newDatabases/PostgreSQL/CSV/days.csv",
+  path: "./newDatabases/Cassandra/CSV/daysByListingId.csv",
   header: [
     { id: "day_id", title: "day_id" },
     { id: "listing_id", title: "listing_id" },
@@ -58,7 +58,7 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-let dayDump = date(1);
+let dayDump = days_by_listing_id(3);
 
 csvWriter.writeRecords(dayDump).then(() => {
   console.log("Done!");

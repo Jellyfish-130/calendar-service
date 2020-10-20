@@ -6,6 +6,9 @@ node_modules/
 database.config.js
 *.log
 data
+*.csv
+newDatabases/PostgreSQL/CSV/
+newDatabases/Cassandra/CSV/
 
 *.csv
 newDatabases/PostgreSQL/CSV/
