@@ -1,11 +1,10 @@
-const faker = require("faker");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const billing = (num) => {
+const billing = (startIndex, endIndex) => {
   let billings = [];
-  for (let i = 1; i <= num; i++) {
-    let cleaningFee = faker.random.number({ min: 50, max: 100 });
-    let basePrice = faker.random.number({ min: 100, max: 1000 });
+  for (let i = startIndex; i <= endIndex; i++) {
+    let cleaningFee = Math.floor(Math.random() * 51) + 50;
+    let basePrice = Math.floor(Math.random() * 901) + 100;
     let serviceFee = Math.ceil(basePrice * 0.07);
     let taxes = Math.ceil(basePrice * 0.0725);
     let total = cleaningFee + basePrice + serviceFee + taxes;
@@ -37,8 +36,15 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-let billingDump = billing(10);
+async function writeBillings(num) {
+  const chunkNum = Math.floor(num / 100);
+  console.log("Chunk count: ", chunkNum);
 
-csvWriter.writeRecords(billingDump).then(() => {
-  console.log("Done!");
-});
+  for (let i = 0; i < 100; i++) {
+    console.log(`Working on chunk : ${i + 1}`);
+    const billingDump = billing(chunkNum * i, chunkNum * (i + 1) - 1);
+    await csvWriter.writeRecords(billingDump);
+  }
+}
+
+writeBillings(15000000);
