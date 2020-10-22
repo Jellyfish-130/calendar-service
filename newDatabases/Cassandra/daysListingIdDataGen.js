@@ -3,18 +3,19 @@ const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 
-const faker = require("faker");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const days_by_listing_id = (num) => {
+booleanArray = [true, false];
+let day_id = -1;
+
+const day = (startIndex, endIndex) => {
   let days = [];
-  let day_id = 0;
 
   const getLastDay = function (yy, mm) {
     return new Date(yy, mm + 1, 0).getDate();
   };
 
-  for (i = 1; i <= num; i++) {
+  for (i = startIndex; i <= endIndex; i++) {
     for (let month = 1; month <= 12; month += 1) {
       const startDay = dayjs()
         .startOf("month")
@@ -35,8 +36,8 @@ const days_by_listing_id = (num) => {
           day_id: day_id,
           listing_id: i,
           date: newDay,
-          booked: faker.random.boolean(),
-          price: Math.floor(faker.random.number({ min: 75, max: 450 })),
+          booked: booleanArray[Math.floor(Math.random() * 2)],
+          price: Math.floor(Math.random() * 376) + 75,
           minimum_nights: 1,
         };
         days.push(date);
@@ -58,8 +59,15 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-let dayDump = days_by_listing_id(3);
+async function writeDays(num) {
+  const chunkNum = Math.floor(num / 100);
+  console.log("Chunk count: ", chunkNum);
 
-csvWriter.writeRecords(dayDump).then(() => {
-  console.log("Done!");
-});
+  for (let i = 0; i < 100; i++) {
+    console.log(`Working on chunk : ${i + 1}`);
+    const dayDump = day(chunkNum * i, chunkNum * (i + 1) - 1);
+    await csvWriter.writeRecords(dayDump);
+  }
+}
+
+writeDays(100000);

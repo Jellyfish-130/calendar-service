@@ -1,6 +1,6 @@
 # Jelly-Fish: SDC
 
-> This is the back-end design of the calender component for a home rental application.
+> This is the back-end design of the calendar component for a home rental application.
 
 ## Related Projects
 
