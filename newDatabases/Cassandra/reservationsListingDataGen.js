@@ -11,6 +11,12 @@ let endDay = startDay.add(Math.floor(Math.random() * 10) + 1, "day");
 const reservation = (startIndex, endIndex) => {
   let reservations = [];
   for (let i = startIndex; i <= endIndex; i++) {
+    let cleaningFee = Math.floor(Math.random() * 51) + 50;
+    let basePrice = Math.floor(Math.random() * 901) + 100;
+    let serviceFee = Math.ceil(basePrice * 0.07);
+    let taxes = Math.ceil(basePrice * 0.0725);
+    let total = cleaningFee + basePrice + serviceFee + taxes;
+
     let entry = {
       reservation_id: i,
       listing_id: Math.floor(Math.random() * 1000),
@@ -19,6 +25,11 @@ const reservation = (startIndex, endIndex) => {
       guest_adults: Math.floor(Math.random() * 6) + 1,
       guest_children: Math.floor(Math.random() * 6),
       guest_infants: Math.floor(Math.random() * 3),
+      fees_cleaning_fee: cleaningFee,
+      fees_base_price: basePrice,
+      fees_service_fee: serviceFee,
+      fees_taxes: taxes,
+      fees_total: total,
     };
     reservations.push(entry);
 
@@ -40,6 +51,11 @@ const csvWriter = createCsvWriter({
     { id: "guest_adults", title: "guest_adults" },
     { id: "guest_children", title: "guest_children" },
     { id: "guest_infants", title: "guest_infants" },
+    { id: "fees_cleaning_fee", title: "fees_cleaning_fee" },
+    { id: "fees_base_price", title: "fees_base_price" },
+    { id: "fees_service_fee", title: "fees_service_fee" },
+    { id: "fees_taxes", title: "fees_taxes" },
+    { id: "fees_total", title: "fees_total" },
   ],
 });
 
@@ -54,4 +70,4 @@ async function writeReservations(num) {
   }
 }
 
-writeReservations(15000000);
+writeReservations(10000000);

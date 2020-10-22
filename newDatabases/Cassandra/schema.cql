@@ -64,4 +64,4 @@ COPY days_by_listing_id (day_id, listing_id, date, booked, price, minimum_nights
 
 COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByUser.csv' WITH HEADER = TRUE ;
 
-COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByListing.csv' WITH HEADER = TRUE ;
+COPY reservations_by_listing (reservation_id, listing_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByListing.csv' WITH HEADER = TRUE ;
