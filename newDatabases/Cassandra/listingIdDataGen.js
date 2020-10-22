@@ -1,16 +1,17 @@
-const faker = require("faker");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-const listing_by_id = (num) => {
+booleanArray = [true, false];
+
+const listing = (startIndex, endIndex) => {
   let listings = [];
-  for (let i = 1; i <= num; i++) {
+  for (let i = startIndex; i <= endIndex; i++) {
     let entry = {
       listing_id: i,
-      weekend_pricing: faker.random.boolean(),
-      cleaning_fee: faker.random.number({ min: 50, max: 100 }),
-      lowest_price: Math.floor(faker.random.number({ min: 75, max: 450 })),
-      rating: faker.finance.amount(3, 4, 2),
-      reviews: faker.random.number({ min: 5, max: 1500 }),
+      weekend_pricing: booleanArray[Math.floor(Math.random() * 2)],
+      cleaning_fee: Math.floor(Math.random() * 51) + 50,
+      lowest_price: Math.floor(Math.random() * 376) + 75,
+      rating: (Math.floor(Math.random() * 101) + 400) / 100,
+      reviews: Math.floor(Math.random() * 496) + 5,
     };
     listings.push(entry);
   }
@@ -29,8 +30,15 @@ const csvWriter = createCsvWriter({
   ],
 });
 
-let listingDump = listing_by_id(10);
+async function writeListings(num) {
+  const chunkNum = Math.floor(num / 100);
+  console.log("Chunk count: ", chunkNum);
 
-csvWriter.writeRecords(listingDump).then(() => {
-  console.log("Done!");
-});
+  for (let i = 0; i < 100; i++) {
+    console.log(`Working on chunk : ${i + 1}`);
+    const listingDump = listing(chunkNum * i, chunkNum * (i + 1) - 1);
+    await csvWriter.writeRecords(listingDump);
+  }
+}
+
+writeListings(20000000);

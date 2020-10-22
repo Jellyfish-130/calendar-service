@@ -1,8 +1,8 @@
-DROP KEYSPACE IF EXISTS calender_service;
+DROP KEYSPACE IF EXISTS calendar_service;
 
-CREATE KEYSPACE calender_service WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 } AND durable_writes = 'true';
+CREATE KEYSPACE calendar_service WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 } AND durable_writes = 'true';
 
-USE calender_service;
+USE calendar_service;
 
 CREATE TABLE listing_by_id (
   listing_id int,
@@ -24,7 +24,7 @@ CREATE TABLE days_by_listing_id (
   PRIMARY KEY (listing_id, day_id)
 )
 
-WITH CLUSTERING ORDER BY (day_id DESC);
+WITH CLUSTERING ORDER BY (day_id ASC);
 
 CREATE TABLE reservations_by_user (
   reservation_id int,
@@ -64,4 +64,4 @@ COPY days_by_listing_id (day_id, listing_id, date, booked, price, minimum_nights
 
 COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByUser.csv' WITH HEADER = TRUE ;
 
-COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByListing.csv' WITH HEADER = TRUE ;
+COPY reservations_by_listing (reservation_id, listing_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByListing.csv' WITH HEADER = TRUE ;

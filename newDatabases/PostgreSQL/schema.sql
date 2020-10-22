@@ -16,8 +16,8 @@ CREATE TABLE calendar_service.day (
   listing_id INTEGER REFERENCES calendar_service.listing (listing_id),
   date DATE,
   booked BOOLEAN,
-  price INTEGER CHECK (price > 0),
-  minimum_nights INTEGER CHECK (minimum_nights > 0 AND minimum_nights < 3)
+  price INTEGER,
+  minimum_nights INTEGER
 );
 
 CREATE TABLE calendar_service.user (
@@ -32,15 +32,15 @@ CREATE TABLE calendar_service.reservation (
   listing_id INTEGER REFERENCES calendar_service.listing (listing_id),
   check_in DATE,
   check_out DATE,
-  guest_adults INTEGER CHECK (guest_adults > 0 AND guest_adults < 7),
-  guest_children INTEGER CHECK  (guest_children < 6),
+  guest_adults INTEGER,
+  guest_children INTEGER,
   guest_infants INTEGER
 );
 
 CREATE TABLE calendar_service.billing (
   billing_id SERIAL PRIMARY KEY,
   reservation_id INTEGER REFERENCES calendar_service.reservation (reservation_id),
-  cleaning_fee INTEGER CHECK (cleaning_fee > 49 AND cleaning_fee < 101),
+  cleaning_fee INTEGER,
   base_price INTEGER NOT NULL,
   service_fee INTEGER NOT NULL,
   taxes INTEGER NOT NULL,
@@ -50,7 +50,6 @@ CREATE TABLE calendar_service.billing (
 COPY calendar_service.listing (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/PostgreSQL/CSV/listings.csv' WITH CSV HEADER DELIMITER ',';
 
 COPY calendar_service.day (day_id, listing_id, date, booked, price, minimum_nights) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/PostgreSQL/CSV/days.csv' WITH CSV HEADER DELIMITER ',';
-
 
 COPY calendar_service.user (user_id, username, email) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/PostgreSQL/CSV/users.csv' WITH CSV HEADER DELIMITER ',';
 
