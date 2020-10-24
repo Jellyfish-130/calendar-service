@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const client = require("../database/index");
 
-/* eslint-disable no-console */
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
@@ -15,7 +14,6 @@ const getFees = (listing, days, booking) => {
 
   const nightCount =
     Math.floor(
-      // eslint-disable-next-line max-len
       (Date.UTC(
         checkOut.getFullYear(),
         checkOut.getMonth(),
@@ -29,7 +27,6 @@ const getFees = (listing, days, booking) => {
         (1000 * 60 * 60 * 24)
     ) + 1;
 
-  // Create an array of the date objects of all selected dates
   const nights = [];
 
   const selectedMonthIndex = checkIn.getMonth();
@@ -73,8 +70,6 @@ const getFees = (listing, days, booking) => {
 };
 
 // POST Request: add reservation by listing ID
-//"/listings/:listingId/reservations/"
-//JSON body
 router.route("/listings/:listingId/reservations/").post((req, res) => {
   const { listingId } = req.params;
   const { newBooking } = req.body;

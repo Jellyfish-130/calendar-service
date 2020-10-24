@@ -1,24 +1,28 @@
 import http from "k6/http";
-// import { check } from "k6";
-// import { Rate } from "k6/metrics";
-
-// export let errorRate = new Rate("errors");
 
 // export default function () {
-//   var url = "http://api.dev.loadimpact.com/v3/users";
-//   var params = {
-//     headers: {
-//       Authorization: "Token ffc62b27db68502eebc6e90b7c1476d29c581f4d",
-//       "Content-Type": "application/json",
-//     },
-//   };
-//   check(http.get(url, params), {
-//     "status is 200": (r) => r.status == 200,
-//   }) || errorRate.add(1);
+//   http.get(
+//     `http://localhost:3002/api/listings/${Math.floor(Math.random() * 1000)}/`
+//   );
 // }
 
 export default function () {
-  http.get(
-    `http://localhost:3002/api/listings/${Math.floor(Math.random() * 1000)}/`
-  );
+  var url = `http://localhost:3002/api/listings/${Math.floor(
+    Math.random() * 1000
+  )}/reservations/`;
+  var payload = JSON.stringify({
+    newBooking: {
+      checkIn: "2020-11-15T13:00:00.000Z",
+      checkOut: "2020-11-17T13:00:00.000Z",
+      guestAdults: 1,
+      guestChildren: 0,
+      guestInfants: 0,
+    },
+  });
+  var params = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  http.post(url, payload, params);
 }

@@ -9,6 +9,7 @@ data
 *.csv
 newDatabases/PostgreSQL/CSV/
 newDatabases/Cassandra/CSV/
+newrelic.js
 
 # OS generated files
 .DS_Store
