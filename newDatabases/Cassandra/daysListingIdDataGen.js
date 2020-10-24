@@ -38,7 +38,6 @@ const day = (startIndex, endIndex) => {
           date: newDay,
           booked: booleanArray[Math.floor(Math.random() * 2)],
           price: Math.floor(Math.random() * 376) + 75,
-          minimum_nights: 1,
         };
         days.push(date);
       }
@@ -55,7 +54,6 @@ const csvWriter = createCsvWriter({
     { id: "date", title: "date" },
     { id: "booked", title: "booked" },
     { id: "price", title: "price" },
-    { id: "minimum_nights", title: "minimum_nights" },
   ],
 });
 

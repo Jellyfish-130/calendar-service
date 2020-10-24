@@ -6,9 +6,7 @@ USE calendar_service;
 
 CREATE TABLE listing_by_id (
   listing_id int,
-  weekend_pricing boolean,
   cleaning_fee int,
-  lowest_price int,
   rating decimal,
   reviews int,
   PRIMARY KEY (listing_id)
@@ -20,7 +18,6 @@ CREATE TABLE days_by_listing_id (
   date date,
   booked boolean,
   price int,
-  minimum_nights int,
   PRIMARY KEY (listing_id, day_id)
 )
 
@@ -58,9 +55,9 @@ CREATE TABLE reservations_by_listing (
   PRIMARY KEY (listing_id, reservation_id)
 );
 
-COPY listing_by_id (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/listingsById.csv' WITH HEADER = TRUE;
+COPY listing_by_id (listing_id, cleaning_fee, rating, reviews) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/listingsById.csv' WITH HEADER = TRUE;
 
-COPY days_by_listing_id (day_id, listing_id, date, booked, price, minimum_nights) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/daysByListingId.csv' WITH HEADER = TRUE;
+COPY days_by_listing_id (day_id, listing_id, date, booked, price) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/daysByListingId.csv' WITH HEADER = TRUE;
 
 COPY reservations_by_user (reservation_id, user_id, check_in, check_out, guest_adults, guest_children, guest_infants, fees_cleaning_fee, fees_base_price, fees_service_fee, fees_taxes, fees_total) FROM '/Users/catherinestraus/Desktop/calendar-service/newDatabases/Cassandra/CSV/reservationsByUser.csv' WITH HEADER = TRUE ;
 

@@ -6,15 +6,15 @@ dayjs.extend(utc);
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
 let startDay = dayjs().startOf("month");
-let endDay = startDay.add(Math.floor(Math.random() * 10) + 1, "day");
+let endDay = startDay.add(Math.floor(Math.random() * 3) + 1, "day");
 
 const reservation = (startIndex, endIndex) => {
   let reservations = [];
   for (let i = startIndex; i <= endIndex; i++) {
     let entry = {
       reservation_id: i,
-      user_id: Math.floor(Math.random() * 1000),
-      listing_id: Math.floor(Math.random() * 1000),
+      user_id: Math.floor(Math.random() * 100000),
+      listing_id: Math.floor(Math.random() * 100000),
       check_in: startDay.format("YYYY-MM-DD"),
       check_out: endDay.format("YYYY-MM-DD"),
       guest_adults: Math.floor(Math.random() * 6) + 1,
@@ -23,10 +23,8 @@ const reservation = (startIndex, endIndex) => {
     };
     reservations.push(entry);
 
-    startDay = dayjs()
-      .startOf("month")
-      .add(Math.floor(Math.random() * 10) + 1, "day");
-    endDay = startDay.add(Math.floor(Math.random() * 5) + 1, "day");
+    startDay = endDay.add(1, "day");
+    endDay = startDay.add(Math.floor(Math.random() * 3) + 1, "day");
   }
   return reservations;
 };

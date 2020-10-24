@@ -96,9 +96,9 @@ npm install
   "newBooking": {
     "checkIn": "2020-11-15T13:00:00.000Z",
     "checkOut": "2020-11-17T13:00:00.000Z",
-    "guests": { "adults": 1, "children": 0, "infants": 0 },
-    "username": "catastrausphic",
-    "email": "catherinestraus@berkeley.edu"
+    "guestAdults": 1,
+    "guestChildren": 0,
+    "guestInfants": 0
   }
 }
 ```
@@ -126,39 +126,6 @@ npm install
     "total": 901
   }
 }
-```
-
-### Get all listings
-
-- GET `/api/listings/`
-
-**Success Status Code:** `200`
-
-**Returns:** JSON
-
-```json
-[
-    {
-        "days": [
-            [
-                {
-                    "day_id": 1,
-                    "date": "2020-10-01T13:00:00.000Z",
-                    "booked": true,
-                    "price": 417,
-                    "minimumNights": 1
-                },...
-            ]...
-        ],
-        "listing_id": 1,
-        "cleaningFee": 72,
-        "weekendPricing": false,
-        "lowestPrice": 417,
-        "rating": 3.33,
-        "reviews": 1306,
-        "reservations": [],
-    },...
-]
 ```
 
 ### Get listing by listing ID
@@ -189,8 +156,6 @@ npm install
     ],
     "listing_id": 90,
     "cleaningFee": 85,
-    "weekendPricing": false,
-    "lowestPrice": 323,
     "rating": 3.86,
     "reviews": 952,
     "reservations": [],
