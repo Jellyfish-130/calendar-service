@@ -6,15 +6,12 @@ const client = new Client({
   port: 5432,
 });
 
-
-
 client
   .connect()
   .then(() => console.log("Connected successfully"))
   .then(() =>
-    client.query("INSERT INTO calendar_service.lisitngs values (listing_id, weekend_pricing, cleaning_fee, lowest_price, rating, reviews)", [...])
+    client.query("SELECT * FROM calendar_service.listing WHERE listing_id = 1")
   )
-  .then(() => client.query("SELECT * FROM calendar_service.listings"))
   .then((results) => console.table(results.rows))
   .catch((e) => console.log(e))
   .finally(() => client.end());

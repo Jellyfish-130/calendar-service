@@ -1,15 +1,11 @@
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 
-booleanArray = [true, false];
-
 const listing = (startIndex, endIndex) => {
   let listings = [];
   for (let i = startIndex; i <= endIndex; i++) {
     let entry = {
       listing_id: i,
-      weekend_pricing: booleanArray[Math.floor(Math.random() * 2)],
       cleaning_fee: Math.floor(Math.random() * 51) + 50,
-      lowest_price: Math.floor(Math.random() * 376) + 75,
       rating: (Math.floor(Math.random() * 101) + 400) / 100,
       reviews: Math.floor(Math.random() * 496) + 5,
     };
@@ -22,9 +18,7 @@ const csvWriter = createCsvWriter({
   path: "./newDatabases/Cassandra/CSV/listingsById.csv",
   header: [
     { id: "listing_id", title: "listing_id" },
-    { id: "weekend_pricing", title: "weekend_pricing" },
     { id: "cleaning_fee", title: "cleaning_fee" },
-    { id: "lowest_price", title: "lowest_price" },
     { id: "rating", title: "rating" },
     { id: "reviews", title: "reviews" },
   ],

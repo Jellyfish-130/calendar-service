@@ -9,6 +9,7 @@ data
 *.csv
 newDatabases/PostgreSQL/CSV/
 newDatabases/Cassandra/CSV/
+newrelic.js
 
 *.csv
 newDatabases/PostgreSQL/CSV/
