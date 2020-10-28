@@ -102,15 +102,16 @@ router.route("/listings/:listingId/reservations/").post((req, res) => {
               return getFees(listing.rows[0], days.rows, newBooking);
             })
             .then((prices) => {
-              client.query(
-                `INSERT INTO calendar_service.billing (reservation_id, cleaning_fee, base_price, service_fee, taxes, total) VALUES (${reservationId}, ${prices})`
-              );
+              client
+                .query(
+                  `INSERT INTO calendar_service.billing (reservation_id, cleaning_fee, base_price, service_fee, taxes, total) VALUES (${reservationId}, ${prices}) RETURNING *`
+                )
+                .then((result) => {
+                  newBooking.prices = result.rows[0];
+                  res.status(200).send(newBooking);
+                });
             });
         });
-    })
-
-    .then((result) => {
-      res.status(200).send(result);
     })
     .catch((err) => res.status(400).send(`Error: ${err}`));
 });
@@ -161,15 +162,48 @@ router
       .query(
         `SELECT * FROM calendar_service.reservation WHERE listing_id = ${listingId} AND user_id = ${userId}`
       )
-      .then((Result) => res.status(200).send(Result.rows))
+      .then((result) => res.status(200).send(result.rows))
       .catch((err) => res.status(400).send(`Error: ${err}`));
   });
 
-//PATCH Request: change reservation by listing ID and reservation ID
-//"/api/listings/:listingId/reservations/:reservationId/"
-//JSON body
+//PATCH Request: change reservation by reservation ID
+router.route("/reservations/:reservationId/").patch((req, res) => {
+  const { reservationId } = req.params;
+  const { updatedBooking } = req.body;
 
-//DELETE Request: reservation by listing ID and reservation ID
-//"/api/listings/:listingId/reservations/:reservationId"
+  const checkIn = updatedBooking.checkIn;
+  const checkOut = updatedBooking.checkOut;
+  const guestAdults = updatedBooking.guestAdults;
+  const guestChildren = updatedBooking.guestChildren;
+  const guestInfants = updatedBooking.guestInfants;
+
+  client
+    .query(
+      `UPDATE calendar_service.reservation SET check_in = '${checkIn}', check_out = '${checkOut}', guest_adults = ${guestAdults}, guest_children = ${guestChildren}, guest_infants = ${guestInfants} WHERE reservation_id = ${reservationId}`
+    )
+    .then((result) => res.status(200).send(updatedBooking))
+    .catch((err) => res.status(400).send(`Error: ${err}`));
+});
+
+//DELETE Request: delete reservation by reservation ID
+router.route("/reservations/:reservationId").delete((req, res) => {
+  const { listingId, reservationId } = req.params;
+  client
+    .query(
+      `DELETE FROM calendar_service.billing
+        WHERE reservation_id = ${reservationId}`
+    )
+    .then(() => {
+      client
+        .query(
+          `DELETE FROM calendar_service.reservation
+              WHERE reservation_id = ${reservationId} RETURNING *`
+        )
+        .then((result) =>
+          res.status(204).send(JSON.stringify({ Deleted: true }))
+        )
+        .catch((err) => res.status(400).send(`Error: ${err}`));
+    });
+});
 
 module.exports = router;

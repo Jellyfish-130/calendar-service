@@ -1,4 +1,4 @@
-DROP SCHEMA calendar_service CASCADE;
+DROP SCHEMA IF EXISTS calendar_service CASCADE;
 
 CREATE SCHEMA calendar_service;
 
