@@ -94,9 +94,9 @@ npm install
 ```json
 {
   "newBooking": {
-    "checkIn": "2020-11-15T13:00:00.000Z",
-    "checkOut": "2020-11-17T13:00:00.000Z",
-    "guestAdults": 1,
+    "checkIn": "2020-11-15",
+    "checkOut": "2020-11-17",
+    "guestAdults": 3,
     "guestChildren": 0,
     "guestInfants": 0
   }
@@ -107,23 +107,19 @@ npm install
 
 ```json
 {
-  "reservation_id": 1,
-  "checkIn": "2020-11-15T13:00:00.000Z",
-  "checkOut": "2020-11-17T13:00:00.000Z",
-  "guests": {
-    "adults": 1,
-    "children": 0,
-    "infants": 0
-  },
-  "user_id": 1,
-  "username": "catastrausphic",
-  "email": "catherinestraus@berkeley.edu",
-  "fees": {
-    "cleaningFee": 98,
-    "basePrice": 782,
-    "serviceFee": 12,
-    "taxes": 9,
-    "total": 901
+  "checkIn": "2020-11-15",
+  "checkOut": "2020-11-17",
+  "guestAdults": 3,
+  "guestChildren": 0,
+  "guestInfants": 0,
+  "prices": {
+    "billing_id": 15033113,
+    "reservation_id": 15033114,
+    "cleaning_fee": 92,
+    "base_price": 493,
+    "service_fee": 35,
+    "taxes": 36,
+    "total": 656
   }
 }
 ```
@@ -143,22 +139,10 @@ npm install
 
 ```json
 {
-    "days": [
-        [
-            {
-                "day_id": 1,
-                "date": "2020-10-01T13:00:00.000Z",
-                "booked": false,
-                "price": 323,
-                "minimumNights": 1
-            },...
-        ]...
-    ],
-    "listing_id": 90,
-    "cleaningFee": 85,
-    "rating": 3.86,
-    "reviews": 952,
-    "reservations": [],
+  "listing_id": 90,
+  "cleaning_fee": 86,
+  "rating": "4.69",
+  "reviews": 239
 }
 ```
 
@@ -177,53 +161,96 @@ npm install
 
 ```json
 [
-  {
-    "guests": {
-      "adults": 1,
-      "children": 0,
-      "infants": 0
-    },
-    "fees": {
-      "cleaningFee": 98,
-      "basePrice": 782,
-      "serviceFee": 12,
-      "taxes": 9,
-      "total": 901
-    },
-    "reservation_id": 1,
-    "checkIn": "2020-11-15T13:00:00.000Z",
-    "checkOut": "2020-11-17T13:00:00.000Z",
-    "user_id": 1,
-    "username": "catastrausphic",
-    "email": "catherinestraus@berkeley.edu"
-  },...
+    {
+        "reservation_id": 182956,
+        "user_id": 73672,
+        "listing_id": 95,
+        "check_in": "3523-06-08",
+        "check_out": "3523-06-11T",
+        "guest_adults": 4,
+        "guest_children": 3,
+        "guest_infants": 2
+    },...
 ]
 ```
 
-### Change reservation by listing ID and reservation ID
+### Get reservations by user ID
 
-- PATCH `/api/listings/:listingId/reservations/:reservationId/`
+- GET `/users/:userId/reservations/`
 
 **Path Parameters:**
 
 - `listingId` listing id
+- Ex: `/api/users/95/reservations/`
+
+**Success Status Code:** `200`
+
+**Returns:** JSON
+
+```json
+[
+    {
+        "reservation_id": 285939,
+        "user_id": 95,
+        "listing_id": 8139,
+        "check_in": "4369-05-04",
+        "check_out": "4369-05-07",
+        "guest_adults": 5,
+        "guest_children": 4,
+        "guest_infants": 2
+    },...
+]
+```
+
+### Get reservations by listing ID and user ID
+
+- GET `/api/listings/:listingId/users/:userId/reservations/`
+
+**Path Parameters:**
+
+- `listingId` listing id
+- Ex: `/listings/26671/users/55340/reservations/`
+
+**Success Status Code:** `200`
+
+**Returns:** JSON
+
+```json
+[
+  {
+    "reservation_id": 5,
+    "user_id": 55340,
+    "listing_id": 26671,
+    "check_in": "2020-10-13",
+    "check_out": "2020-10-16",
+    "guest_adults": 2,
+    "guest_children": 2,
+    "guest_infants": 2
+  }
+]
+```
+
+### Change reservation by reservation ID
+
+- PATCH `/api/reservations/:reservationId/`
+
+**Path Parameters:**
+
 - `reservationId` reservation id
-- Ex: `/api/listings/95/reservations/1/`
+- Ex: `/api/reservations/1/`
 
 **Success Status Code:** `200`
 
 **Request Body:** JSON
 
-- Note: accepts JSON with any of the following keys.
-
 ```json
 {
   "updatedBooking": {
-    "checkIn": "2020-11-15T13:00:00.000Z",
-    "checkOut": "2020-11-17T13:00:00.000Z",
-    "guests": { "adults": 3, "children": 0, "infants": 0 },
-    "username": "catastrausphic",
-    "email": "catherinestraus@berkeley.edu"
+    "checkIn": "2020-11-15",
+    "checkOut": "2020-11-17",
+    "guestAdults": 1,
+    "guestChildren": 0,
+    "guestInfants": 0
   }
 }
 ```
@@ -232,44 +259,27 @@ npm install
 
 ```json
 {
-  "reservation_id": 1,
-  "checkIn": "2020-11-15T13:00:00.000Z",
-  "checkOut": "2020-11-17T13:00:00.000Z",
-  "guests": {
-    "adults": 3,
-    "children": 0,
-    "infants": 0
-  },
-  "user_id": 1,
-  "username": "catastrausphic",
-  "email": "catherinestraus@berkeley.edu",
-  "fees": {
-    "cleaningFee": 98,
-    "basePrice": 782,
-    "serviceFee": 12,
-    "taxes": 9,
-    "total": 901
-  }
+  "checkIn": "2020-11-15",
+  "checkOut": "2020-11-17",
+  "guestAdults": 1,
+  "guestChildren": 0,
+  "guestInfants": 0
 }
 ```
 
-### Delete reservation by listing ID and reservation ID
+### Delete reservation by reservation ID
 
-- DELETE `/api/listings/:listingId/reservations/:reservationId`
+- DELETE `/api/reservations/:reservationId`
 
 **Path Parameters:**
 
-- `listingId` listing id
 - `reservationId` reservation id
-- Ex: `/api/listings/95/reservations/1/`
+- Ex: `/api/reservations/1/`
 
 **Success Status Code:** `204`
 
 **Returns:** JSON
 
 ```json
-{
-  "success": true,
-  "updatedCount": 1
-}
+{ "Deleted": true }
 ```
