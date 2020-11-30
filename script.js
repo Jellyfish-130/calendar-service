@@ -1,11 +1,5 @@
 import http from "k6/http";
 
-// export default function () {
-//   http.get(
-//     `http://localhost:3002/api/listings/${Math.floor(Math.random() * 1000)}/`
-//   );
-// }
-
 export default function () {
   var url = `http://localhost:3002/api/listings/${Math.floor(
     Math.random() * 1000

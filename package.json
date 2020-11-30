@@ -4,13 +4,9 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "clean": "rm dist/bundle.js",
-    "build-dev": "webpack -d --mode development --watch src/",
-    "build": "webpack -p --mode production",
     "test": "jest",
     "start-dev": "nodemon server/server.js --watch",
-    "start": "node server/server.js",
-    "seed": "node database/seed.js"
+    "start": "node server/server.js"
   },
   "repository": {
     "type": "git",
